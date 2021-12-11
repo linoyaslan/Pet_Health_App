@@ -3,6 +3,7 @@
    <application
         android:label="pet_health_app"
         android:icon="@mipmap/ic_launcher">
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -37,5 +38,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBoOh5q96QibdvLYOnIVK5xrKm3OB1cBW8"/>
     </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 </manifest>
