@@ -6,8 +6,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:pet_health_app/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_health_app/models/user.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
+  AwesomeNotifications().initialize(
+    'resource://drawable/res_notification_app_icon',
+    [
+      NotificationChannel(
+          channelKey: 'basic_channel',
+          channelName: 'Basic Notifications',
+          defaultColor: Colors.teal,
+          importance: NotificationImportance.High,
+          channelShowBadge: true,
+          soundSource:
+              'resource://raw/android_app_src_main_res_raw_res_custom_notification')
+    ],
+  );
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());

@@ -30,15 +30,20 @@ class _PetHomeState extends State<PetHome> {
     List<Widget> _widgetOptions = <Widget>[
       PetProfile(pet: widget.pet),
       Text('Test'),
+      Text('Test'),
       Text('Test')
     ];
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
         title: const Text('Pet Health'),
         actions: <Widget>[
           FlatButton.icon(
-            icon: Icon(Icons.logout_outlined),
-            label: Text('Logout'),
+            icon: Icon(Icons.logout_outlined, color: Colors.white),
+            label: Text(
+              'Logout',
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () async {
               await _auth.signOut();
             },
@@ -68,7 +73,7 @@ class _PetHomeState extends State<PetHome> {
           // ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent[800],
+        selectedItemColor: Colors.blue,
         onTap: _onItemTapped,
       ),
     );

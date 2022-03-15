@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class VaccinatedCheckBox extends StatefulWidget {
   final String name;
-  final bool value;
+  final bool? value;
   final Function(bool?) onChanged;
   const VaccinatedCheckBox(
       {Key? key,
@@ -20,7 +20,7 @@ class _VaccinatedCheckBoxState extends State<VaccinatedCheckBox> {
 
   @override
   void initState() {
-    checked = widget.value;
+    checked = widget.value!;
     super.initState();
   }
 

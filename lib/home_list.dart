@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/services/auth.dart';
@@ -15,6 +16,7 @@ class HomeList extends StatefulWidget {
 
 class _HomeListState extends State<HomeList> {
   final AuthService _auth = AuthService();
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final DataRepository repository = DataRepository();
   final boldStyle =
       const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
@@ -38,6 +40,7 @@ class _HomeListState extends State<HomeList> {
       //     )
       //   ],
       // ),
+      backgroundColor: Colors.brown[50],
       body: StreamBuilder<QuerySnapshot>(
           stream: repository.getStream(),
           builder: (context, snapshot) {
@@ -46,6 +49,7 @@ class _HomeListState extends State<HomeList> {
             return _buildList(context, snapshot.data?.docs ?? []);
           }),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         onPressed: () {
           _addPet();
         },
@@ -73,8 +77,11 @@ class _HomeListState extends State<HomeList> {
   }
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
+    final User? user = auth.currentUser;
     final pet = Pet.fromSnapshot(snapshot);
-
-    return PetCard(pet: pet, boldStyle: boldStyle);
+    if (pet.uid == user!.uid) {
+      return PetCard(pet: pet, boldStyle: boldStyle);
+    }
+    return SizedBox.shrink();
   }
 }

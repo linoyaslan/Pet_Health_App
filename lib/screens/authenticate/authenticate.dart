@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_health_app/screens/authenticate/sign_in.dart';
 import 'package:pet_health_app/screens/authenticate/register.dart';
+import 'package:pet_health_app/screens/authenticate/test_sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key? key}) : super(key: key);

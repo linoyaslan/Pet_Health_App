@@ -3,14 +3,21 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_health_app/cleaning_home.dart';
+import 'package:pet_health_app/general_home.dart';
+import 'package:pet_health_app/hygiene_home.dart';
+import 'package:pet_health_app/medical_home.dart';
 import 'package:pet_health_app/models/pet.dart';
+import 'package:pet_health_app/models/vaccination.dart';
 import 'package:pet_health_app/pet_details.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_health_app/vaccination_list.dart';
 import 'models/pet.dart';
 import 'repository/data_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:path/path.dart' as Path;
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PetProfile extends StatefulWidget {
   final Pet pet;
@@ -22,15 +29,16 @@ class PetProfile extends StatefulWidget {
 
 class _PetProfileState extends State<PetProfile> {
   final DataRepository repository = DataRepository();
+  final _formKey = GlobalKey<FormState>();
   late DateFormat dateFormat = DateFormat('yyyy-MM-dd');
   late String name;
   late String type;
   late String gender;
   String? profileImage;
-  String? birthday;
-
+  late String birthday;
+  late String date;
   // ignore: unused_field
-  late File _pickedImage;
+  late XFile? _pickedImage;
   late String _uploadedFileURL;
   @override
   void initState() {
@@ -38,7 +46,9 @@ class _PetProfileState extends State<PetProfile> {
     name = widget.pet.name;
     profileImage = widget.pet.profileImage;
     gender = widget.pet.gender;
-    birthday = widget.pet.birthday;
+    //date = dateFormat.format(DateTime.now());
+    //birthday = widget.pet.birthday;
+    birthday = dateFormat.format(widget.pet.birthday);
     super.initState();
   }
 
@@ -52,7 +62,7 @@ class _PetProfileState extends State<PetProfile> {
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.blueAccent, Colors.white])),
+                      colors: [Colors.blue, Colors.white])),
               child: Container(
                 width: double.infinity,
                 height: 350.0,
@@ -77,11 +87,11 @@ class _PetProfileState extends State<PetProfile> {
                         ),
                       ),
                       CircleAvatar(
-                        // backgroundImage: NetworkImage(
-                        //   profileImage ??
-                        //       'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
-                        // ),
-                        backgroundImage: Image.file(_pickedImage),
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(
+                          profileImage ??
+                              'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
+                        ),
                         radius: 70.0,
                         child: Align(
                             alignment: Alignment.bottomRight,
@@ -91,6 +101,7 @@ class _PetProfileState extends State<PetProfile> {
                               highlightColor: Colors.pink,
                               onPressed: () {
                                 _showPickOptionsDialog(context);
+                                //_uploadPhoto(mFileImage)
                               },
                             )),
                       ),
@@ -124,7 +135,7 @@ class _PetProfileState extends State<PetProfile> {
                                     Text(
                                       "Type",
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: Colors.blue[700],
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -148,7 +159,7 @@ class _PetProfileState extends State<PetProfile> {
                                     Text(
                                       "Gender",
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: Colors.blue[700],
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -172,7 +183,7 @@ class _PetProfileState extends State<PetProfile> {
                                     Text(
                                       "Birthday",
                                       style: TextStyle(
-                                        color: Colors.blueAccent,
+                                        color: Colors.blue[700],
                                         fontSize: 18.0,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -180,9 +191,9 @@ class _PetProfileState extends State<PetProfile> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
+                                    //                                      birthday ?? '-',
                                     Text(
-                                      birthday ?? '-',
-                                      //(dateFormat.format(birthday!)),
+                                      birthday,
                                       style: TextStyle(
                                         fontSize: 17.0,
                                         color: Colors.blueGrey,
@@ -199,121 +210,234 @@ class _PetProfileState extends State<PetProfile> {
                   ),
                 ),
               )),
+
+          //               onPressed: () {
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) =>
+          //               VaccinationList(pet: widget.pet)));
+          // },
           Container(
-              margin: EdgeInsets.all(30),
-              //padding: EdgeInsets.only(top: 24),
+              margin: EdgeInsets.symmetric(horizontal: 7.0, vertical: 0),
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 55.0),
               alignment: Alignment.center,
               child: Column(children: [
-                Row(children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(120),
-                    child: SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: ElevatedButton.icon(
-                        icon: Icon(
-                          Icons.medical_services,
-                          size: 10,
-                        ),
-                        label: Text(
-                          'Vaccin',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {},
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/syringe-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VaccinationList(
+                                                    pet: widget.pet)));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text("Vaccination")
+                        ],
                       ),
                     ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(120),
-                    child: SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: ElevatedButton.icon(
-                        icon: Icon(
-                          Icons.food_bank,
-                          size: 10,
-                        ),
-                        label: Text(
-                          'Food',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {},
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/dog-food-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text("Food")
+                        ],
                       ),
                     ),
-                  ),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(120),
-                    child: SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: ElevatedButton.icon(
-                        icon: Icon(
-                          Icons.food_bank,
-                          size: 10,
-                        ),
-                        label: Text(
-                          'Hygiene',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {},
+
+                    // IconButton(
+                    //     icon: Image.asset('assets/images/food.png'),
+                    //     iconSize: 76,
+                    //     onPressed: () {}),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/pet-first-aid-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MedicalHome()));
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text("Medical")
+                        ],
                       ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
                 Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(120),
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: ElevatedButton.icon(
-                          icon: Icon(
-                            Icons.food_bank,
-                            size: 10,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/mop-water-bucket-and-cleaning-spray-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CleaningHome()));
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                          label: Text(
-                            'Cleaning',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          onPressed: () {},
-                        ),
+                          Text("Cleaning")
+                        ],
                       ),
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(120),
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: ElevatedButton.icon(
-                          icon: Icon(
-                            Icons.food_bank,
-                            size: 10,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/pet-lotion-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                HygieneHome(pet: widget.pet)));
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                          label: Text(
-                            'Medical',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          onPressed: () {},
-                        ),
+                          Text("Hygiene")
+                        ],
                       ),
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(120),
-                      child: SizedBox(
-                        width: 80,
-                        height: 80,
-                        child: ElevatedButton.icon(
-                          icon: Icon(
-                            Icons.food_bank,
-                            size: 10,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: Colors.white,
+                            child: Center(
+                              child: Ink(
+                                decoration: const ShapeDecoration(
+                                  color: Colors.white,
+                                  shape: CircleBorder(
+                                      side: BorderSide(
+                                          width: 3, color: Colors.blue)),
+                                ),
+                                child: IconButton(
+                                  icon: SvgPicture.asset(
+                                    "assets/icons/paw-print-svgrepo-com.svg",
+                                  ),
+                                  iconSize: 50,
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                GeneralHome()));
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                          label: Text(
-                            'General',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          onPressed: () {},
-                        ),
+                          Text("General")
+                        ],
                       ),
                     ),
                   ],
@@ -365,14 +489,15 @@ class _PetProfileState extends State<PetProfile> {
   }
 
   _loadPicker(ImageSource source) async {
-    File picked = (await ImagePicker().pickImage(source: source)) as File;
+    final picker = ImagePicker();
+    XFile? picked = await picker.pickImage(source: source, imageQuality: 50);
+
     if (picked != null) {
       setState(() {
         _pickedImage = picked;
       });
     }
     Navigator.pop(context);
-    uploadImageToFirebase();
   }
 
   void _showPickOptionsDialog(BuildContext context) {
@@ -384,15 +509,34 @@ class _PetProfileState extends State<PetProfile> {
                 children: <Widget>[
                   ListTile(
                       title: Text("Pick from Gallery"),
-                      onTap: () async {
+                      onTap: () {
                         //File image = (await ImagePicker()
                         //    .pickImage(source: ImageSource.gallery)) as File;
                         _loadPicker(ImageSource.gallery);
+                        uploadImageToFirebase();
+                        // if (_formKey.currentState?.validate() ?? false) {
+                        //   Navigator.of(context).pop();
+
+                        //   widget.pet.profileImage =
+                        //       profileImage ?? widget.pet.profileImage;
+                        //   repository.updatePet(widget.pet);
+                        // }
                       }),
                   ListTile(
-                      title: Text("Take a pictuer"),
-                      onTap: () {
-                        _loadPicker(ImageSource.camera);
+                      title: Text("Take a picture"),
+                      onTap: () async {
+                        print("befor load");
+                        await _loadPicker(ImageSource.camera);
+                        print("after load, picked: ");
+                        print(_pickedImage);
+                        uploadImageToFirebase();
+                        // if (_formKey.currentState?.validate() ?? false) {
+                        //   Navigator.of(context).pop();
+
+                        //   widget.pet.profileImage =
+                        //       profileImage ?? widget.pet.profileImage;
+                        //   repository.updatePet(widget.pet);
+                        // }
                       })
                 ],
               ),
@@ -400,16 +544,33 @@ class _PetProfileState extends State<PetProfile> {
   }
 
   Future uploadImageToFirebase() async {
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('chats/${Path.basename(_pickedImage.path)}}');
-    StorageUploadTask uploadTask = storageReference.putFile(_pickedImage);
-    await uploadTask.onComplete;
+    print("in uploadImage");
+    print("pickedImage: ");
+    print(_pickedImage);
+    FirebaseStorage storage = FirebaseStorage.instance;
+
+    File? file = File(_pickedImage!.path);
+    Reference ref = storage.ref().child('profile/${Path.basename(file.path)}}');
+    print("befor uploaded");
+    UploadTask uploadTask = ref.putFile(file);
+    await uploadTask;
     print('File Uploaded');
-    storageReference.getDownloadURL().then((fileURL) {
+    ref.getDownloadURL().then((fileURL) {
       setState(() {
-        _uploadedFileURL = fileURL;
+        profileImage = fileURL;
+        widget.pet.profileImage = profileImage;
+        repository.updatePet(widget.pet);
       });
     });
+  }
+
+  Future _uploadPhoto(mFileImage) async {
+    final Reference storageReference =
+        FirebaseStorage.instance.ref().child("profile");
+    UploadTask uploadTask =
+        storageReference.child("pet_$profileImage.jpg").putFile(mFileImage);
+
+    String url = await (await uploadTask).ref.getDownloadURL();
+    profileImage = url;
   }
 }

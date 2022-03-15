@@ -32,6 +32,7 @@
 //   }
 // }
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_health_app/blocks/application_block.dart';
@@ -54,11 +55,6 @@ class _HomeState extends State<Home> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeList(),
-    Professionals(),
-    Text('Forum')
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -67,11 +63,58 @@ class _HomeState extends State<Home> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Allow Notifications'),
+            content: Text('Our App would like to send you notifications'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Don\'t Allow',
+                  style: TextStyle(color: Colors.grey, fontSize: 18),
+                ),
+              ),
+              TextButton(
+                onPressed: () => AwesomeNotifications()
+                    .requestPermissionToSendNotifications()
+                    .then((_) => Navigator.pop(context)),
+                child: Text(
+                  'Allow',
+                  style: TextStyle(
+                    color: Colors.teal,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      HomeList(),
+      Professionals(),
+      Text('Calendar'),
+      Text('Forum'),
+    ];
     return ChangeNotifierProvider(
         create: (context) => ApplicationBlock(),
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.blue,
             title: const Text('Pet Health'),
             actions: <Widget>[
               FlatButton.icon(
@@ -87,6 +130,7 @@ class _HomeState extends State<Home> {
             child: _widgetOptions.elementAt(_selectedIndex),
           ),
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.pets),
@@ -94,7 +138,11 @@ class _HomeState extends State<Home> {
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.search),
-                label: 'Profeesionals',
+                label: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.calendar_today),
+                label: 'Calendar',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.people),
@@ -102,7 +150,7 @@ class _HomeState extends State<Home> {
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blueAccent[800],
+            selectedItemColor: Colors.blue,
             onTap: _onItemTapped,
           ),
         ));

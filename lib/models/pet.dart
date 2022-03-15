@@ -1,28 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pet_health_app/Hygiene/bath_list.dart';
 import 'package:pet_health_app/models/vaccination.dart';
-
+import 'package:pet_health_app/models/bath.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'vaccination.dart';
 
 class Pet {
   String name;
+  String? uid;
   String? notes;
   String type;
   List<Vaccination> vaccinations;
+  List<Bath> bathes;
   String? referenceId;
   String? profileImage;
   String gender;
-  String? birthday;
+  DateTime birthday;
 
   Pet(this.name,
       {this.notes,
+      this.uid,
       required this.type,
       this.referenceId,
-      this.profileImage,
+      this.profileImage =
+          'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
       required this.vaccinations,
+      required this.bathes,
       required this.gender,
-      this.birthday});
+      required this.birthday});
 
   factory Pet.fromSnapshot(DocumentSnapshot snapshot) {
     final newPet = Pet.fromJson(snapshot.data() as Map<String, dynamic>);
@@ -42,11 +48,12 @@ Pet _petFromJson(Map<String, dynamic> json) {
   return Pet(json['name'] as String,
       notes: json['notes'] as String?,
       type: json['type'] as String,
-      birthday: json['birthday'] as String?,
+      birthday: (json['birthday'] as Timestamp).toDate(),
       gender: json['gender'] as String,
       profileImage: json['profileImage'] as String?,
-      vaccinations:
-          _convertVaccinations(json['vaccinations'] as List<dynamic>));
+      uid: json['uid'] as String?,
+      vaccinations: _convertVaccinations(json['vaccinations'] as List<dynamic>),
+      bathes: _convertBathes(json['bathes'] as List<dynamic>));
 }
 
 List<Vaccination> _convertVaccinations(List<dynamic> vaccinationMap) {
@@ -58,6 +65,15 @@ List<Vaccination> _convertVaccinations(List<dynamic> vaccinationMap) {
   return vaccinations;
 }
 
+List<Bath> _convertBathes(List<dynamic> bathMap) {
+  final bathes = <Bath>[];
+
+  for (final bath in bathMap) {
+    bathes.add(Bath.fromJson(bath as Map<String, dynamic>));
+  }
+  return bathes;
+}
+
 Map<String, dynamic> _petToJson(Pet instance) => <String, dynamic>{
       'name': instance.name,
       'notes': instance.notes,
@@ -65,7 +81,9 @@ Map<String, dynamic> _petToJson(Pet instance) => <String, dynamic>{
       'profileImage': instance.profileImage,
       'gender': instance.gender,
       'birthday': instance.birthday,
+      'uid': instance.uid,
       'vaccinations': _vaccinationList(instance.vaccinations),
+      'bathes': _bathList(instance.bathes),
     };
 
 List<Map<String, dynamic>>? _vaccinationList(List<Vaccination>? vaccinations) {
@@ -79,6 +97,16 @@ List<Map<String, dynamic>>? _vaccinationList(List<Vaccination>? vaccinations) {
   return vaccinationMap;
 }
 
+List<Map<String, dynamic>>? _bathList(List<Bath>? bathes) {
+  if (bathes == null) {
+    return null;
+  }
+  final bathMap = <Map<String, dynamic>>[];
+  bathes.forEach((bath) {
+    bathMap.add(bath.toJson());
+  });
+  return bathMap;
+}
 
 // class Pet {
 //   final String uid;

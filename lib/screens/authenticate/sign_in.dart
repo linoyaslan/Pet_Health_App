@@ -24,15 +24,22 @@ class _SignInState extends State<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.brown[100],
+            backgroundColor: Colors.blue[50],
             appBar: AppBar(
-                backgroundColor: Colors.brown[400],
+                backgroundColor: Colors.blue,
                 elevation: 0.0,
-                title: Text('Sign in to Pet Health'),
+                title: Text(
+                  'Sign in to Pet Health',
+                  style: TextStyle(color: Colors.white),
+                ),
                 actions: <Widget>[
                   FlatButton.icon(
-                    icon: Icon(Icons.person_add_alt_1_outlined),
-                    label: Text('Register'),
+                    icon: Icon(
+                      Icons.person_add_alt_1_outlined,
+                      color: Colors.white,
+                    ),
+                    label:
+                        Text('Register', style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       widget.toggleView();
                     },
@@ -53,11 +60,24 @@ class _SignInState extends State<SignIn> {
               //     }
               //   },
               // ),
+
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Center(
+                        child: Container(
+                            width: 200,
+                            height: 100,
+                            /*decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(50.0)),*/
+                            child: Image.asset('assets/images/logoPet.png')),
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Email'),
@@ -67,7 +87,7 @@ class _SignInState extends State<SignIn> {
                         setState(() => email = val);
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Password'),
@@ -79,9 +99,9 @@ class _SignInState extends State<SignIn> {
                         setState(() => password = val);
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     RaisedButton(
-                      color: Colors.pink[400],
+                      color: Colors.blue,
                       child: Text(
                         'Sign in',
                         style: TextStyle(color: Colors.white),
@@ -103,7 +123,7 @@ class _SignInState extends State<SignIn> {
                       },
                     ),
                     SizedBox(
-                      height: 12.0,
+                      height: 10.0,
                     ),
                     Text(
                       error,

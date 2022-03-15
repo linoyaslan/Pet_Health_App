@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'models/pet.dart';
 import 'add_vaccination.dart';
 import 'vaccination_list.dart';
+import 'widgets/date_picker.dart';
 import 'widgets/text_field.dart';
 import 'models/vaccination.dart';
 import 'widgets/choose_chips.dart';
@@ -24,16 +25,17 @@ class PetDetail extends StatefulWidget {
 class _PetDetailState extends State<PetDetail> {
   final DataRepository repository = DataRepository();
   final _formKey = GlobalKey<FormState>();
-  final dateFormat = DateFormat('yyyy-MM-dd');
+  //final dateFormat = DateFormat('yyyy-MM-dd');
   late List<CategoryOption> animalTypes;
   late List<CategoryOption> genderTypes;
   late String name;
   late String type;
   late String gender;
   String? profileImage;
-  String? birthday;
+  //String? birthday;
   String? notes;
   late File _pickedImage;
+  late DateTime birthday;
   @override
   void initState() {
     type = widget.pet.type;
@@ -72,16 +74,16 @@ class _PetDetailState extends State<PetDetail> {
                       'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
                 ),
                 radius: 70.0,
-                child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: new IconButton(
-                      icon: new Icon(Icons.add_a_photo),
-                      color: Colors.black,
-                      highlightColor: Colors.pink,
-                      onPressed: () {
-                        _showPickOptionsDialog(context);
-                      },
-                    )),
+                // child: Align(
+                //     alignment: Alignment.bottomRight,
+                //     child: new IconButton(
+                //       icon: new Icon(Icons.add_a_photo),
+                //       color: Colors.black,
+                //       highlightColor: Colors.pink,
+                //       onPressed: () {
+                //         //_showPickOptionsDialog(context);
+                //       },
+                //     )),
               ),
               UserTextField(
                 name: 'Pet Name',
@@ -94,20 +96,30 @@ class _PetDetailState extends State<PetDetail> {
                 inputType: TextInputType.name,
                 onChanged: (value) => name = value ?? name,
               ),
-              UserTextField(
-                name: 'Pet Image',
-                initialValue: widget.pet.profileImage ?? '',
-                validator: (value) {},
-                inputType: TextInputType.name,
-                onChanged: (value) => profileImage = value,
-              ),
-              UserTextField(
-                name: 'Pet Birthday',
-                initialValue: widget.pet.birthday ?? '',
-                validator: (value) {},
-                inputType: TextInputType.name,
-                onChanged: (value) => birthday = value,
-              ),
+              // UserTextField(
+              //   name: 'Pet Image',
+              //   initialValue: widget.pet.profileImage ?? '',
+              //   validator: (value) {},
+              //   inputType: TextInputType.name,
+              //   onChanged: (value) => profileImage = value,
+              // ),
+              // UserTextField(
+              //   name: 'Pet Birthday',
+              //   initialValue: widget.pet.birthday ?? '',
+              //   validator: (value) {},
+              //   inputType: TextInputType.name,
+              //   onChanged: (value) => birthday = value,
+              // ),
+              DatePicker(
+                  name: 'Date',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter the birthday of your pet';
+                    }
+                  },
+                  onChanged: (text) {
+                    birthday = text;
+                  }),
               ChooseType(
                 title: 'Animal Type',
                 options: animalTypes,
@@ -172,9 +184,9 @@ class _PetDetailState extends State<PetDetail> {
                         widget.pet.name = name;
                         widget.pet.type = type;
                         widget.pet.notes = notes ?? widget.pet.notes;
-                        widget.pet.birthday = birthday ?? widget.pet.birthday;
-                        widget.pet.profileImage =
-                            profileImage ?? widget.pet.profileImage;
+                        widget.pet.birthday = birthday;
+                        //widget.pet.profileImage =
+                        //profileImage ?? widget.pet.profileImage;
                         repository.updatePet(widget.pet);
                       }
                     },
@@ -192,65 +204,31 @@ class _PetDetailState extends State<PetDetail> {
     ));
   }
 
-  Widget buildRow(Vaccination vaccination) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(vaccination.vaccination),
-        ),
-        Text(dateFormat.format(vaccination.date)),
-        Checkbox(
-          value: vaccination.done ?? false,
-          onChanged: (newValue) {
-            setState(() {
-              vaccination.done = newValue;
-            });
-          },
-        )
-      ],
-    );
-  }
+  // Widget buildRow(Vaccination vaccination) {
+  //   return Row(
+  //     children: <Widget>[
+  //       Expanded(
+  //         flex: 1,
+  //         child: Text(vaccination.vaccination),
+  //       ),
+  //       Text(dateFormat.format(vaccination.date)),
+  //       Checkbox(
+  //         value: vaccination.done ?? false,
+  //         onChanged: (newValue) {
+  //           setState(() {
+  //             vaccination.done = newValue;
+  //           });
+  //         },
+  //       )
+  //     ],
+  //   );
+  // }
 
-  void _addVaccination(Pet pet, Function callback) {
-    showDialog<Widget>(
-        context: context,
-        builder: (BuildContext context) {
-          return AddVaccination(pet: pet, callback: callback);
-        });
-  }
-
-  _loadPicker(ImageSource source) async {
-    File picked = (await ImagePicker().pickImage(source: source)) as File;
-    if (picked != null) {
-      setState(() {
-        _pickedImage = picked;
-      });
-    }
-    Navigator.pop(context);
-  }
-
-  void _showPickOptionsDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                      title: Text("Pick from Gallery"),
-                      onTap: () async {
-                        //File image = (await ImagePicker()
-                        //    .pickImage(source: ImageSource.gallery)) as File;
-                        _loadPicker(ImageSource.gallery);
-                      }),
-                  ListTile(
-                      title: Text("Take a pictuer"),
-                      onTap: () {
-                        _loadPicker(ImageSource.camera);
-                      })
-                ],
-              ),
-            ));
-  }
+  // void _addVaccination(Pet pet, Function callback) {
+  //   showDialog<Widget>(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return AddVaccination(pet: pet, callback: callback);
+  //       });
+  // }
 }

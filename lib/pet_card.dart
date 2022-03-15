@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'pet_room.dart';
 import 'models/pet.dart';
 import 'utils/pet_icons.dart';
@@ -46,7 +48,7 @@ class PetCard extends StatelessWidget {
       petIcon = IconButton(
         icon: const Icon(
           //Pets.cat,
-          Icons.pets,
+          FontAwesomeIcons.cat,
           color: Colors.pinkAccent,
         ),
         onPressed: () {},
@@ -55,7 +57,7 @@ class PetCard extends StatelessWidget {
       petIcon = IconButton(
         icon: const Icon(
           //Pets.dog_seating,
-          Icons.pets,
+          FontAwesomeIcons.dog,
           color: Colors.blueAccent,
         ),
         onPressed: () {},

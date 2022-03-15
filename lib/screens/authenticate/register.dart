@@ -24,15 +24,16 @@ class _RegisterState extends State<Register> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Colors.brown[100],
+            backgroundColor: Colors.blue[50],
             appBar: AppBar(
-                backgroundColor: Colors.brown[400],
+                backgroundColor: Colors.blue,
                 elevation: 0.0,
                 title: Text('Sign up to Pet Health'),
                 actions: <Widget>[
                   FlatButton.icon(
-                    icon: Icon(Icons.login_outlined),
-                    label: Text('Sign In'),
+                    icon: Icon(Icons.login_outlined, color: Colors.white),
+                    label:
+                        Text('Sign In', style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       widget.toggleView();
                     },
@@ -57,7 +58,19 @@ class _RegisterState extends State<Register> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Center(
+                        child: Container(
+                            width: 200,
+                            height: 100,
+                            /*decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(50.0)),*/
+                            child: Image.asset('assets/images/logoPet.png')),
+                      ),
+                    ),
+                    SizedBox(height: 10.0),
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Email'),
@@ -67,7 +80,7 @@ class _RegisterState extends State<Register> {
                         setState(() => email = val);
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     TextFormField(
                       decoration:
                           textInputDecoration.copyWith(hintText: 'Password'),
@@ -79,9 +92,9 @@ class _RegisterState extends State<Register> {
                         setState(() => password = val);
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
                     RaisedButton(
-                      color: Colors.pink[400],
+                      color: Colors.blue,
                       child: Text(
                         'Register',
                         style: TextStyle(color: Colors.white),
