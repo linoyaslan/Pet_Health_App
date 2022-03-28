@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pet_health_app/models/forum.dart';
 import 'package:pet_health_app/models/user.dart';
 import 'package:pet_health_app/screens/wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,8 +24,26 @@ void main() async {
               'resource://raw/android_app_src_main_res_raw_res_custom_notification')
     ],
   );
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // CollectionReference collection =
+  //     FirebaseFirestore.instance.collection("Forum");
+  // var collectionForumDogs = await collection.where('subject', isEqualTo: 'Dogs').get();
+  // var docCats = await collection.where('subject', isEqualTo: 'Cats').get();
+  // var docOther = await collection.where('subject', isEqualTo: 'Other').get();
+  // if (docDogs.size == 0) {
+  //   Forum dogs = Forum(subject: "Dogs", posts: []);
+  //   createCollection(dogs);
+  // }
+  // if (docCats.size == 0) {
+  //   Forum cats = Forum(subject: "Cats", posts: []);
+  //   createCollection(cats);
+  // }
+  // if (docOther.size == 0) {
+  //   Forum other = Forum(subject: "Other", posts: []);
+  //   createCollection(other);
+  // }
   runApp(MyApp());
 }
 
@@ -42,4 +62,8 @@ class MyApp extends StatelessWidget {
       catchError: (_, __) => null,
     );
   }
+}
+
+createCollection(Forum forum) async {
+  await FirebaseFirestore.instance.collection("Forum").add(forum.toJson());
 }

@@ -36,6 +36,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_health_app/blocks/application_block.dart';
+import 'package:pet_health_app/forum/forum_home.dart';
 import 'package:pet_health_app/home_list.dart';
 import 'package:pet_health_app/professionals.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
@@ -108,7 +109,7 @@ class _HomeState extends State<Home> {
       HomeList(),
       Professionals(),
       Text('Calendar'),
-      Text('Forum'),
+      ForumHome(),
     ];
     return ChangeNotifierProvider(
         create: (context) => ApplicationBlock(),

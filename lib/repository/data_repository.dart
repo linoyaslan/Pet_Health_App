@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_health_app/models/post.dart';
 import 'package:pet_health_app/models/vaccination.dart';
 
 import '../models/pet.dart';
@@ -13,12 +14,22 @@ class DataRepository {
   final CollectionReference collection =
       FirebaseFirestore.instance.collection('pet');
 
+  final CollectionReference collectionForumDogs =
+      FirebaseFirestore.instance.collection('ForumDogs');
+
   // 2
   DocumentReference profileImageRef =
       FirebaseFirestore.instance.collection('pet').doc();
 
+  DocumentReference postDoc =
+      FirebaseFirestore.instance.collection('ForumDogs').doc();
+
   Stream<QuerySnapshot> getStream() {
     return collection.snapshots();
+  }
+
+  Stream<QuerySnapshot> getForumDogsStream() {
+    return collectionForumDogs.snapshots();
   }
 
   // 3
@@ -26,9 +37,17 @@ class DataRepository {
     return collection.add(pet.toJson());
   }
 
+  Future<DocumentReference> addPost(Post post) {
+    return collectionForumDogs.add(post.toJson());
+  }
+
   // 4
   void updatePet(Pet pet) async {
     await collection.doc(pet.referenceId).update(pet.toJson());
+  }
+
+  void updatePost(Post post) async {
+    await collectionForumDogs.doc(post.referenceId).update(post.toJson());
   }
 
   void updateVaccin(Pet pet, int index) async {
