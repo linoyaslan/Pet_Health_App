@@ -28,18 +28,6 @@ class _HomeListState extends State<HomeList> {
 
   Widget _buildHome(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Pet Health'),
-      //   actions: <Widget>[
-      //     FlatButton.icon(
-      //       icon: Icon(Icons.logout_outlined),
-      //       label: Text('Logout'),
-      //       onPressed: () async {
-      //         await _auth.signOut();
-      //       },
-      //     )
-      //   ],
-      // ),
       backgroundColor: Colors.brown[50],
       body: StreamBuilder<QuerySnapshot>(
           stream: repository.getStream(),

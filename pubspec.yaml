@@ -48,6 +48,7 @@ dependencies:
   #flutter_icons: ^1.1.0
   font_awesome_flutter: ^9.2.0
   awesome_notifications: ^0.0.6+10
+  scoped_model: ^1.0.1
   #flat_icons_flutter: ^1.0.2
   flutter_svg: ^1.0.3
 dev_dependencies:
@@ -72,8 +73,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+   # - assets/colors/colors.dart
     - assets/images/
     - assets/icons/
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

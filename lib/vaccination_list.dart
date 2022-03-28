@@ -162,36 +162,6 @@ class _VaccinationListState extends State<VaccinationList> {
                                               onChanged: (text) {
                                                 done = text ?? done;
                                               }),
-                                          // CheckboxListTile(
-                                          //     title: Text('Given'),
-                                          //     contentPadding:
-                                          //         const EdgeInsets.only(
-                                          //             left: 0.0),
-                                          //     controlAffinity:
-                                          //         ListTileControlAffinity
-                                          //             .leading,
-                                          //     value: vaccinationsList[index].done,
-                                          //     onChanged: (value) {
-                                          //       setState(() {
-                                          //         vaccinstionsList[index].done =
-                                          //             value;
-                                          //       });
-                                          //     })
-                                          // Checkbox(
-                                          //     value:
-                                          //         vaccinstionsList[index].done,
-                                          //     onChanged: (bool? value) {
-                                          //       print(vaccinstionsList[index]
-                                          //           .done
-                                          //           .toString());
-                                          //       setState(() {
-                                          //         vaccinstionsList[index].done =
-                                          //             value!;
-                                          //         print(vaccinstionsList[index]
-                                          //             .done
-                                          //             .toString());
-                                          //       });
-                                          //     })
                                         ],
                                       ),
                                     ),
