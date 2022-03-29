@@ -1,6 +1,11 @@
+import 'dart:collection';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/models/comment.dart';
 
+part 'post.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class Post {
   String headline;
   String body;
@@ -8,6 +13,9 @@ class Post {
   final DateTime date;
   List<Comment>? comments;
   String? referenceId;
+  Map<String, int>? likes;
+  int likesCount;
+  bool isLiked;
 
   Post(
       {required this.headline,
@@ -15,40 +23,50 @@ class Post {
       required this.userEmail,
       required this.date,
       this.comments,
-      this.referenceId});
+      this.referenceId,
+      this.likes,
+      this.likesCount = 0,
+      this.isLiked = false});
 
   factory Post.fromSnapshot(DocumentSnapshot snapshot) {
     final newPost = Post.fromJson(snapshot.data() as Map<String, dynamic>);
     newPost.referenceId = snapshot.reference.id;
     return newPost;
   }
-
-  factory Post.fromJson(Map<String, dynamic> json) => _postFromJson(json);
-  // 4
-  Map<String, dynamic> toJson() => _postToJson(this);
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  Map<String, dynamic> toJson() => _$PostToJson(this);
+  // factory Post.fromJson(Map<String, dynamic> json) => _postFromJson(json);
+  // // 4
+  // Map<String, dynamic> toJson() => _postToJson(this);
 
   @override
   String toString() => 'Post<$date>';
 }
 
-Post _postFromJson(Map<String, dynamic> json) {
-  return Post(
-    headline: json['headline'] as String,
-    body: json['body'] as String,
-    userEmail: json['userEmail'] as String,
-    date: (json['date'] as Timestamp).toDate(),
-    comments: _convertComments(json['comments'] as List<dynamic>),
-  );
-}
+// Post _postFromJson(Map<String, dynamic> json) {
+//   return Post(
+//     headline: json['headline'] as String,
+//     body: json['body'] as String,
+//     userEmail: json['userEmail'] as String,
+//     date: (json['date'] as Timestamp).toDate(),
+//     comments: _convertComments(json['comments'] as List<dynamic>),
+//     likes: json['likes'] as Map<String, bool>,
+//     likesCount: json['likesCount'] as int,
+//     isLiked: json['isLiked'] as bool,
+//   );
+// }
 
 // 2
-Map<String, dynamic> _postToJson(Post instance) => <String, dynamic>{
-      'headline': instance.headline,
-      'body': instance.body,
-      'userEmail': instance.userEmail,
-      'date': instance.date,
-      'comments': _commentList(instance.comments),
-    };
+// Map<String, dynamic> _postToJson(Post instance) => <String, dynamic>{
+//       'headline': instance.headline,
+//       'body': instance.body,
+//       'userEmail': instance.userEmail,
+//       'date': instance.date,
+//       'comments': _commentList(instance.comments),
+//       'likes': instance.likes,
+//       'likesCount': instance.likesCount,
+//       'isLiked': instance.isLiked,
+//     };
 
 List<Comment> _convertComments(List<dynamic> commentMap) {
   final comments = <Comment>[];
