@@ -16,6 +16,7 @@ class _AddPostState extends State<AddPost> {
   late String userEmail;
   late DateTime date;
   late Post newPost;
+  late final Map<String, int>? _likes;
   //late DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final DataRepository repository = DataRepository();
@@ -90,11 +91,15 @@ class _AddPostState extends State<AddPost> {
                             if (headline != null && body != null)
                               {
                                 newPost = Post(
-                                    headline: headline,
-                                    body: body,
-                                    userEmail: userEmail,
-                                    date: DateTime.now(),
-                                    comments: []),
+                                  headline: headline,
+                                  body: body,
+                                  userEmail: userEmail,
+                                  date: DateTime.now(),
+                                  comments: [],
+                                  //likes: _likes,
+                                ),
+
+                                // likes: _likes![auth.currentUser!.email]=0 as bool ),
                                 repository.addPost(newPost),
                                 Navigator.of(context).pop()
                               }
