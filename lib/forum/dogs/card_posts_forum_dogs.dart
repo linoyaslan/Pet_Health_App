@@ -1,17 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_health_app/forum/post_view.dart';
 import 'package:pet_health_app/models/post.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_health_app/repository/data_repository.dart';
 
 class CardPostDogsForum extends StatelessWidget {
   final Post post;
-
-  const CardPostDogsForum({Key? key, required this.post}) : super(key: key);
+  final String splittedEmail;
+  const CardPostDogsForum(
+      {Key? key, required this.post, required this.splittedEmail})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     late DateFormat dateFormat = DateFormat.yMMMMd();
+
     return Padding(
       padding: const EdgeInsets.all(1.0),
       child: Card(
@@ -65,7 +71,7 @@ class CardPostDogsForum extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                                text: "   " + post.likes.toString(),
+                                text: "   " + post.likesCount.toString(),
                                 style: TextStyle(
                                   color: Colors.black45,
                                   fontWeight: FontWeight.w500,
@@ -100,12 +106,23 @@ class CardPostDogsForum extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () => Navigator.push<Widget>(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PostView(post: post),
-              ),
-            ),
+            onTap: () async {
+              if (post.likes == null ||
+                  !post.likes!.containsKey(splittedEmail)) {
+                await FirebaseFirestore.instance
+                    .collection('ForumDogs')
+                    .doc(post.referenceId)
+                    .update({
+                  'likes.$splittedEmail': 0,
+                });
+              }
+              Navigator.push<Widget>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostView(post: post),
+                ),
+              );
+            },
             splashColor: Colors.blue,
           )),
     );

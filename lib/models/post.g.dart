@@ -15,9 +15,7 @@ Post _$PostFromJson(Map<String, dynamic> json) => Post(
           ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
       referenceId: json['referenceId'] as String?,
-      likes: (json['likes'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
-      ),
+      likes: json['likes'] as Map<String, dynamic>?,
       likesCount: json['likesCount'] as int? ?? 0,
       isLiked: json['isLiked'] as bool? ?? false,
     );

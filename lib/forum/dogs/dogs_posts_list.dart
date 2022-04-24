@@ -19,6 +19,16 @@ class _DogsPostsListState extends State<DogsPostsList> {
   final DataRepository repository = DataRepository();
   final boldStyle =
       const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold);
+  late String userEmail;
+  late List<String> splittedEmailList;
+  late String splittedEmail;
+  @override
+  void initState() {
+    userEmail = auth.currentUser!.email!;
+    splittedEmailList = userEmail.split('.');
+    splittedEmail = splittedEmailList[0];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +86,6 @@ class _DogsPostsListState extends State<DogsPostsList> {
     // if (collection.isEmpty == true) {
     //   return CardPostDogsForum();
     // }
-    return CardPostDogsForum(post: post);
+    return CardPostDogsForum(post: post, splittedEmail: splittedEmail);
   }
 }
