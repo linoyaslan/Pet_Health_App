@@ -25,6 +25,7 @@ class _CommentListState extends State<CommentList> {
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final DataRepository repository = DataRepository();
+  late int _id;
 
   @override
   void initState() {
@@ -62,116 +63,80 @@ class _CommentListState extends State<CommentList> {
             return ListView.builder(
               itemBuilder: (BuildContext, index) {
                 return InkWell(
-                    child: Card(
-                      child: ListTile(
-                          title: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 3, 0, 0),
-                            child: Text(commentList[index].body),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                            child: Text(commentList[index].userEmail +
-                                "   " +
-                                dateFormat.format(commentList[index].date)),
-                          )),
-                    ),
-                    onLongPress: () => {
-                          if (auth.currentUser!.email ==
-                              commentList[index].userEmail)
-                            {
-                              showModalBottomSheet(
-                                  context: context,
-                                  builder: (context) {
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading: new Icon(
-                                            Icons.edit,
-                                            color: Colors.grey,
-                                          ),
-                                          title: new Text('Edit'),
-                                          onTap: () async {
-                                            widget.commentController.text =
-                                                commentList[index].body;
-                                            // if (commentList[index]
-                                            //         .referenceId !=
-                                            //     null) {
-                                            //   try {
-                                            //     await FirebaseFirestore
-                                            //         .instance
-                                            //         .collection(
-                                            //             'ForumDogs')
-                                            //         .doc(post.referenceId)
-                                            //         .update(
-                                            //       {
-                                            //         'comments': FieldValue
-                                            //             .arrayRemove(
-                                            //           [
-                                            //             commentList[index]
-                                            //                 .toJson()
-                                            //           ],
-                                            //         )
-                                            //       },
-                                            //     );
-                                            //     commentList[index].body =
-                                            //         widget
-                                            //             .commentController
-                                            //             .text;
-                                            //     await FirebaseFirestore
-                                            //         .instance
-                                            //         .collection(
-                                            //             'ForumDogs')
-                                            //         .doc(post.referenceId)
-                                            //         .update(
-                                            //       {
-                                            //         'comments': FieldValue
-                                            //             .arrayUnion(
-                                            //           [
-                                            //             commentList[index]
-                                            //                 .toJson()
-                                            //           ],
-                                            //         )
-                                            //       },
-                                            //     );
-                                            //   } catch (e) {
-                                            //     print(e);
-                                            //   }
-                                            // }
-                                          },
-                                        ),
-                                        ListTile(
-                                          leading: new Icon(
-                                            Icons.delete,
-                                            color: Colors.grey,
-                                          ),
-                                          title: new Text('Delete'),
-                                          onTap: () async {
-                                            try {
-                                              await FirebaseFirestore.instance
-                                                  .collection('ForumDogs')
-                                                  .doc(post.referenceId)
-                                                  .update(
-                                                {
-                                                  'comments':
-                                                      FieldValue.arrayRemove(
-                                                    [
-                                                      commentList[index]
-                                                          .toJson()
-                                                    ],
-                                                  )
-                                                },
-                                              );
-                                            } catch (e) {
-                                              print(e);
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  })
-                            }
-                        });
+                  child: Card(
+                    child: ListTile(
+                        onLongPress: () => {
+                              setState(() {
+                                _id =
+                                    index; //if you want to assign the index somewhere to check
+                              }),
+                              print(_id),
+                              if (auth.currentUser!.email ==
+                                  commentList[index].userEmail)
+                                {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            ListTile(
+                                              leading: new Icon(
+                                                Icons.edit,
+                                                color: Colors.grey,
+                                              ),
+                                              title: new Text('Edit'),
+                                              onTap: () async {
+                                                widget.commentController.text =
+                                                    commentList[index].body;
+                                              },
+                                            ),
+                                            ListTile(
+                                              leading: new Icon(
+                                                Icons.delete,
+                                                color: Colors.grey,
+                                              ),
+                                              title: new Text('Delete'),
+                                              onTap: () async {
+                                                try {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('ForumDogs')
+                                                      .doc(post.referenceId)
+                                                      .update(
+                                                    {
+                                                      'comments': FieldValue
+                                                          .arrayRemove(
+                                                        [
+                                                          snapshot.data!
+                                                              .removeAt(_id)
+                                                              .toJson()
+                                                        ],
+                                                      )
+                                                    },
+                                                  );
+                                                } catch (e) {
+                                                  print(e);
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      })
+                                }
+                            },
+                        title: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 3, 0, 0),
+                          child: Text(snapshot.data![index].body),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                          child: Text(snapshot.data![index].userEmail +
+                              "   " +
+                              dateFormat.format(snapshot.data![index].date)),
+                        )),
+                  ),
+                );
               },
               itemCount: snapshot.data!.length,
               shrinkWrap: true,

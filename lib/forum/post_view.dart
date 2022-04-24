@@ -142,159 +142,121 @@ class _PostViewState extends State<PostView> {
                                       ),
                                     ],
                                   ),
-                                  Row(children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        //height: 100.0,
-                                        child: ListTile(
-                                            leading: RichText(
-                                          text: TextSpan(children: [
-                                            WidgetSpan(
-                                              child: IconButton(
-                                                icon: Icon(
-                                                  //isClicked
-                                                  snapshot1.data!.likes ==
-                                                              null ||
-                                                          snapshot1.data!
-                                                                      .likes![
-                                                                  splittedEmail] ==
-                                                              0
-                                                      ? Icons.favorite_border
-                                                      : Icons.favorite,
-
-                                                  color: Colors.red,
-                                                  size: 17,
-                                                ),
-                                                onPressed: () async => {
-                                                  // setState(() {
-                                                  //   //isClicked = !isClicked;
-                                                  //   //print(isClicked);
-                                                  // }),
-                                                  if (snapshot1.data!.likes ==
-                                                      null)
-                                                    {
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'ForumDogs')
-                                                          .doc(post.referenceId)
-                                                          .update({
-                                                        'likes.$splittedEmail':
-                                                            1,
-                                                        'likesCount': snapshot1
-                                                                .data!
-                                                                .likesCount +
-                                                            1
-                                                      }),
-                                                    }
-                                                  else if (!snapshot1
-                                                      .data!.likes!
-                                                      .containsKey(
-                                                          splittedEmail))
-                                                    {
-                                                      await FirebaseFirestore
-                                                          .instance
-                                                          .collection(
-                                                              'ForumDogs')
-                                                          .doc(post.referenceId)
-                                                          .update({
-                                                        'likes.$splittedEmail':
-                                                            1,
-                                                        'likesCount': snapshot1
-                                                                .data!
-                                                                .likesCount +
-                                                            1
-                                                      }),
-                                                    }
-                                                  else if (snapshot1
-                                                      .data!.likes!
-                                                      .containsKey(
-                                                          splittedEmail))
-                                                    {
-                                                      if (snapshot1
-                                                                  .data!.likes![
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              //isClicked
+                                              snapshot1.data!.likes == null ||
+                                                      snapshot1.data!.likes![
                                                               splittedEmail] ==
-                                                          1)
-                                                        {
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'ForumDogs')
-                                                              .doc(post
-                                                                  .referenceId)
-                                                              .update({
-                                                            'likes.$splittedEmail':
-                                                                0,
-                                                            'likesCount': snapshot1
-                                                                    .data!
-                                                                    .likesCount -
-                                                                1
-                                                          }),
-                                                        }
-                                                      else
-                                                        {
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'ForumDogs')
-                                                              .doc(post
-                                                                  .referenceId)
-                                                              .update({
-                                                            'likes.$splittedEmail':
-                                                                1,
-                                                            'likesCount': snapshot1
-                                                                    .data!
-                                                                    .likesCount +
-                                                                1
-                                                          }),
-                                                        }
+                                                          0
+                                                  ? Icons.favorite_border
+                                                  : Icons.favorite,
+
+                                              color: Colors.red,
+                                              size: 17,
+                                            ),
+                                            onPressed: () async => {
+                                              if (snapshot1.data!.likes == null)
+                                                {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('ForumDogs')
+                                                      .doc(post.referenceId)
+                                                      .update({
+                                                    'likes.$splittedEmail': 1,
+                                                    'likesCount': snapshot1
+                                                            .data!.likesCount +
+                                                        1
+                                                  }),
+                                                }
+                                              else if (!snapshot1.data!.likes!
+                                                  .containsKey(splittedEmail))
+                                                {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection('ForumDogs')
+                                                      .doc(post.referenceId)
+                                                      .update({
+                                                    'likes.$splittedEmail': 1,
+                                                    'likesCount': snapshot1
+                                                            .data!.likesCount +
+                                                        1
+                                                  }),
+                                                }
+                                              else if (snapshot1.data!.likes!
+                                                  .containsKey(splittedEmail))
+                                                {
+                                                  if (snapshot1.data!.likes![
+                                                          splittedEmail] ==
+                                                      1)
+                                                    {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'ForumDogs')
+                                                          .doc(post.referenceId)
+                                                          .update({
+                                                        'likes.$splittedEmail':
+                                                            0,
+                                                        'likesCount': snapshot1
+                                                                .data!
+                                                                .likesCount -
+                                                            1
+                                                      }),
                                                     }
-                                                },
-                                              ),
-                                            ),
-                                            TextSpan(
-                                                text: "   " +
-                                                    snapshot1.data!.likesCount
-                                                        .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black45,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 13,
-                                                )),
-                                          ]),
-                                        )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 0,
-                                    ),
-                                    Expanded(
-                                      child: SizedBox(
-                                        height: 40.0,
-                                        child: ListTile(
-                                            leading: RichText(
-                                          text: TextSpan(children: [
-                                            WidgetSpan(
-                                              child: Icon(
-                                                FontAwesomeIcons.comment,
-                                                color: Colors.blueAccent,
-                                                size: 17,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                                text: "   " +
-                                                    snapshot.data!.length
-                                                        .toString(),
-                                                style: TextStyle(
-                                                  color: Colors.black45,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 13,
-                                                )),
-                                          ]),
-                                        )),
-                                      ),
-                                    ),
-                                  ]),
+                                                  else
+                                                    {
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'ForumDogs')
+                                                          .doc(post.referenceId)
+                                                          .update({
+                                                        'likes.$splittedEmail':
+                                                            1,
+                                                        'likesCount': snapshot1
+                                                                .data!
+                                                                .likesCount +
+                                                            1
+                                                      }),
+                                                    }
+                                                }
+                                            },
+                                          ),
+                                          Text(
+                                              snapshot1.data!.likesCount
+                                                  .toString(),
+                                              style: TextStyle(
+                                                color: Colors.black45,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 13,
+                                              )),
+                                        ]),
+                                        Text("       "),
+                                        Row(children: [
+                                          //height: 40.0,
+                                          Icon(
+                                            FontAwesomeIcons.comment,
+                                            color: Colors.blueAccent,
+                                            size: 17,
+                                          ),
+
+                                          Text(
+                                              "     " +
+                                                  snapshot.data!.length
+                                                      .toString(),
+                                              style: TextStyle(
+                                                color: Colors.black45,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 13,
+                                              )),
+                                        ]),
+                                      ]),
                                 ]),
                           ),
                         ),
