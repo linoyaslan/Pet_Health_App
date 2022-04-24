@@ -13,7 +13,7 @@ class Post {
   final DateTime date;
   List<Comment>? comments;
   String? referenceId;
-  Map<String, int>? likes;
+  Map<String, dynamic>? likes;
   int likesCount;
   bool isLiked;
 
