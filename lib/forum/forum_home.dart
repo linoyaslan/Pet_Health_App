@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:pet_health_app/forum/dogs/card_posts_forum_dogs.dart';
-import 'package:pet_health_app/forum/dogs/dogs_posts_list.dart';
+import 'package:pet_health_app/forum/card_posts_forum.dart';
+import 'package:pet_health_app/forum/posts_list.dart';
 
 class ForumHome extends StatefulWidget {
   const ForumHome({Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class _ForumHomeState extends State<ForumHome> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              DogsPostsList()));
+                                              PostsList(forumName: 'Dogs')));
                                 },
                               ),
                             ),
@@ -77,7 +77,13 @@ class _ForumHomeState extends State<ForumHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PostsList(forumName: 'Cats')));
+                                },
                               ),
                             ),
                           ),
@@ -111,7 +117,13 @@ class _ForumHomeState extends State<ForumHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              PostsList(forumName: 'Other')));
+                                },
                               ),
                             ),
                           ),

@@ -4,7 +4,8 @@ import 'package:pet_health_app/models/post.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 
 class AddPost extends StatefulWidget {
-  const AddPost({Key? key}) : super(key: key);
+  final String forumName;
+  const AddPost({Key? key, required this.forumName}) : super(key: key);
 
   @override
   State<AddPost> createState() => _AddPostState();
@@ -100,7 +101,7 @@ class _AddPostState extends State<AddPost> {
                                 ),
 
                                 // likes: _likes![auth.currentUser!.email]=0 as bool ),
-                                repository.addPost(newPost),
+                                repository.addPost(newPost, widget.forumName),
                                 Navigator.of(context).pop()
                               }
                           }

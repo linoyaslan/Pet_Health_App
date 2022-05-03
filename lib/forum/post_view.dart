@@ -11,7 +11,9 @@ import 'package:pet_health_app/repository/data_repository.dart';
 
 class PostView extends StatefulWidget {
   final Post post;
-  const PostView({Key? key, required this.post}) : super(key: key);
+  final String forumName;
+  const PostView({Key? key, required this.post, required this.forumName})
+      : super(key: key);
 
   @override
   State<PostView> createState() => _PostViewState();
@@ -42,18 +44,18 @@ class _PostViewState extends State<PostView> {
     return Scaffold(
       backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
-        title: Text("Forum Dogs"),
+        title: Text("Forum " + widget.forumName),
       ),
       body: StreamBuilder<Post>(
           stream: FirebaseFirestore.instance
-              .collection('ForumDogs')
+              .collection('Forum' + widget.forumName)
               .doc(post.referenceId)
               .snapshots()
               .map((doc) => Post.fromJson(doc.data() ?? {})),
           builder: (context, snapshot1) {
             return StreamBuilder<List<Comment>>(
                 stream: FirebaseFirestore.instance
-                    .collection('ForumDogs')
+                    .collection('Forum' + widget.forumName)
                     .doc(post.referenceId)
                     .snapshots()
                     .map((doc) => Post.fromJson(doc.data() ?? {}))
@@ -165,7 +167,8 @@ class _PostViewState extends State<PostView> {
                                                 {
                                                   await FirebaseFirestore
                                                       .instance
-                                                      .collection('ForumDogs')
+                                                      .collection('Forum' +
+                                                          widget.forumName)
                                                       .doc(post.referenceId)
                                                       .update({
                                                     'likes.$splittedEmail': 1,
@@ -179,7 +182,8 @@ class _PostViewState extends State<PostView> {
                                                 {
                                                   await FirebaseFirestore
                                                       .instance
-                                                      .collection('ForumDogs')
+                                                      .collection('Forum' +
+                                                          widget.forumName)
                                                       .doc(post.referenceId)
                                                       .update({
                                                     'likes.$splittedEmail': 1,
@@ -197,8 +201,8 @@ class _PostViewState extends State<PostView> {
                                                     {
                                                       await FirebaseFirestore
                                                           .instance
-                                                          .collection(
-                                                              'ForumDogs')
+                                                          .collection('Forum' +
+                                                              widget.forumName)
                                                           .doc(post.referenceId)
                                                           .update({
                                                         'likes.$splittedEmail':
@@ -213,8 +217,8 @@ class _PostViewState extends State<PostView> {
                                                     {
                                                       await FirebaseFirestore
                                                           .instance
-                                                          .collection(
-                                                              'ForumDogs')
+                                                          .collection('Forum' +
+                                                              widget.forumName)
                                                           .doc(post.referenceId)
                                                           .update({
                                                         'likes.$splittedEmail':
@@ -339,8 +343,10 @@ class _PostViewState extends State<PostView> {
                       ),
                       Expanded(
                           child: CommentList(
-                              post: post,
-                              commentController: commentController)),
+                        post: post,
+                        commentController: commentController,
+                        forumName: widget.forumName,
+                      )),
                       Divider(),
                       ListTile(
                           title: TextFormField(
@@ -360,7 +366,8 @@ class _PostViewState extends State<PostView> {
                                 date: DateTime.now(),
                               );
                               post.comments!.add(newComment);
-                              repository.updatePost(widget.post);
+                              repository.updatePost(
+                                  widget.post, widget.forumName);
                               commentController.clear();
                               // }
                               //widget.callback();
