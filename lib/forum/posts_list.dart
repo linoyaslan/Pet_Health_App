@@ -2,18 +2,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/forum/add_post.dart';
-import 'package:pet_health_app/forum/dogs/card_posts_forum_dogs.dart';
+import 'package:pet_health_app/forum/card_posts_forum.dart';
 import 'package:pet_health_app/models/post.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/services/auth.dart';
 
-class DogsPostsList extends StatefulWidget {
-  const DogsPostsList({Key? key}) : super(key: key);
+class PostsList extends StatefulWidget {
+  final String forumName;
+  const PostsList({Key? key, required this.forumName}) : super(key: key);
   @override
-  _DogsPostsListState createState() => _DogsPostsListState();
+  _PostsListState createState() => _PostsListState();
 }
 
-class _DogsPostsListState extends State<DogsPostsList> {
+class _PostsListState extends State<PostsList> {
   final AuthService _auth = AuthService();
   final FirebaseAuth auth = FirebaseAuth.instance;
   final DataRepository repository = DataRepository();
@@ -40,11 +41,11 @@ class _DogsPostsListState extends State<DogsPostsList> {
       backgroundColor: Colors.lightBlue[50],
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Forum Dogs"),
+        title: Text("Forum " + widget.forumName),
       ),
 
       body: StreamBuilder<QuerySnapshot>(
-          stream: repository.getForumDogsStream(),
+          stream: repository.getForumStream(widget.forumName),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const LinearProgressIndicator();
 
@@ -68,7 +69,10 @@ class _DogsPostsListState extends State<DogsPostsList> {
   }
 
   void _addPost() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => AddPost()));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddPost(forumName: widget.forumName)));
   }
 
   Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
@@ -81,11 +85,14 @@ class _DogsPostsListState extends State<DogsPostsList> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
     //final User? user = auth.currentUser;
     final post = Post.fromSnapshot(snapshot);
-    Stream<QuerySnapshot<Map<String, dynamic>>> collection =
-        FirebaseFirestore.instance.collection("ForumDogs").snapshots();
+    Stream<QuerySnapshot<Map<String, dynamic>>> collection = FirebaseFirestore
+        .instance
+        .collection("Forum" + widget.forumName)
+        .snapshots();
     // if (collection.isEmpty == true) {
     //   return CardPostDogsForum();
     // }
-    return CardPostDogsForum(post: post, splittedEmail: splittedEmail);
+    return CardPostForum(
+        post: post, splittedEmail: splittedEmail, forumName: widget.forumName);
   }
 }

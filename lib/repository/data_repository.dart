@@ -28,8 +28,10 @@ class DataRepository {
     return collection.snapshots();
   }
 
-  Stream<QuerySnapshot> getForumDogsStream() {
-    return collectionForumDogs.snapshots();
+  Stream<QuerySnapshot> getForumStream(String forumName) {
+    return FirebaseFirestore.instance
+        .collection('Forum' + forumName)
+        .snapshots();
   }
 
   // 3
@@ -37,8 +39,10 @@ class DataRepository {
     return collection.add(pet.toJson());
   }
 
-  Future<DocumentReference> addPost(Post post) {
-    return collectionForumDogs.add(post.toJson());
+  Future<DocumentReference> addPost(Post post, String forumName) {
+    return FirebaseFirestore.instance
+        .collection('Forum' + forumName)
+        .add(post.toJson());
   }
 
   // 4
@@ -46,8 +50,17 @@ class DataRepository {
     await collection.doc(pet.referenceId).update(pet.toJson());
   }
 
-  void updatePost(Post post) async {
-    await collectionForumDogs.doc(post.referenceId).update(post.toJson());
+  void updatePost(Post post, String forumName) async {
+    await FirebaseFirestore.instance
+        .collection('Forum' + forumName)
+        .doc(post.referenceId)
+        .update(post.toJson());
+  }
+
+  void updateComment(Post post, int index) async {
+    await collectionForumDogs
+        .doc(post.referenceId)
+        .update(post.comments![index].toJson());
   }
 
   void updateVaccin(Pet pet, int index) async {
