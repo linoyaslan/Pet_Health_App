@@ -3,6 +3,8 @@ import 'package:pet_health_app/models/pet.dart';
 import 'package:pet_health_app/pet_profile.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/services/auth.dart';
+import 'package:pet_health_app/toDo/todo_home.dart';
+import 'package:provider/provider.dart';
 
 class PetHome extends StatefulWidget {
   final Pet pet;
@@ -19,10 +21,19 @@ class _PetHomeState extends State<PetHome> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  void _onItemTapped(
+    int index,
+  ) {
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ToDoHome()),
+      );
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 
   @override
@@ -30,7 +41,7 @@ class _PetHomeState extends State<PetHome> {
     List<Widget> _widgetOptions = <Widget>[
       PetProfile(pet: widget.pet),
       Text('Test'),
-      Text('Test'),
+      ToDoHome(),
       Text('Test')
     ];
     return Scaffold(
