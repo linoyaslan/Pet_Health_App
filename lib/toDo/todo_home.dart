@@ -69,9 +69,10 @@ class _ToDoHomeState extends State<ToDoHome> {
                 //   return buildText('Something Went Wrong Try later');
                 // } else {
                 final todos = snapshot.data;
-
                 final provider = Provider.of<TodosProvider>(context);
+                // if (todos != null) {
                 provider.setTodos(todos!);
+                //  }
                 return tabs[selectedIndex];
             }
           }),

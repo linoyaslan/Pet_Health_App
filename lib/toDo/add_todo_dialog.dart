@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_health_app/models/todo.dart';
 import 'package:pet_health_app/toDo/todo_form.dart';
@@ -12,6 +13,7 @@ class AddTodoDialogWidget extends StatefulWidget {
 }
 
 class _AddTodoDialogWidgetState extends State<AddTodoDialogWidget> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   String title = '';
   String description = '';
@@ -51,6 +53,7 @@ class _AddTodoDialogWidgetState extends State<AddTodoDialogWidget> {
         title: title,
         description: description,
         createdTime: DateTime.now(),
+        uid: auth.currentUser!.uid,
       );
 
       final provider = Provider.of<TodosProvider>(context, listen: false);

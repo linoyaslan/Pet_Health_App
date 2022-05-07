@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_health_app/gallery/gallery.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:pet_health_app/pet_profile.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
@@ -40,7 +41,9 @@ class _PetHomeState extends State<PetHome> {
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
       PetProfile(pet: widget.pet),
-      Text('Test'),
+      Gallery(
+        pet: widget.pet,
+      ),
       ToDoHome(),
       Text('Test')
     ];
