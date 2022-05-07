@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -46,8 +45,6 @@ class _PetProfileState extends State<PetProfile> {
     name = widget.pet.name;
     profileImage = widget.pet.profileImage;
     gender = widget.pet.gender;
-    //date = dateFormat.format(DateTime.now());
-    //birthday = widget.pet.birthday;
     birthday = dateFormat.format(widget.pet.birthday);
     super.initState();
   }
@@ -210,14 +207,6 @@ class _PetProfileState extends State<PetProfile> {
                   ),
                 ),
               )),
-
-          //               onPressed: () {
-          //   Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) =>
-          //               VaccinationList(pet: widget.pet)));
-          // },
           Container(
               margin: EdgeInsets.symmetric(horizontal: 7.0, vertical: 0),
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 55.0),
@@ -291,11 +280,6 @@ class _PetProfileState extends State<PetProfile> {
                         ],
                       ),
                     ),
-
-                    // IconButton(
-                    //     icon: Image.asset('assets/images/food.png'),
-                    //     iconSize: 76,
-                    //     onPressed: () {}),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                       child: Column(
@@ -443,46 +427,6 @@ class _PetProfileState extends State<PetProfile> {
                   ],
                 )
               ]))
-          // Container(
-          //   child: Padding(
-          //     padding:
-          //         const EdgeInsets.symmetric(vertical: 30.0, horizontal: 16.0),
-          //     child: Column(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //     ),
-          //   ),
-          // ),
-          // Container(
-          //   width: 300.00,
-          //   child: RaisedButton(
-          //       onPressed: () {},
-          //       // shape: RoundedRectangleBorder(
-          //       //     borderRadius: BorderRadius.circular(80.0)),
-          //       // elevation: 0.0,
-          //       // padding: EdgeInsets.all(0.0),
-          //       child: Ink(
-          //         decoration: BoxDecoration(
-          //           gradient: LinearGradient(
-          //               begin: Alignment.centerRight,
-          //               end: Alignment.centerLeft,
-          //               colors: [Colors.blueAccent, Colors.blueGrey]),
-          //           borderRadius: BorderRadius.circular(80.0),
-          //         ),
-          //         child: Container(
-          //           constraints:
-          //               BoxConstraints(maxWidth: 100.0, minHeight: 100.0),
-          //           alignment: Alignment.center,
-          //           child: Text(
-          //             "Vaccinations",
-          //             style: TextStyle(
-          //                 color: Colors.white,
-          //                 fontSize: 11.0,
-          //                 fontWeight: FontWeight.w300),
-          //           ),
-          //         ),
-          //       )),
-          // ),
         ],
       ),
     );
@@ -509,34 +453,15 @@ class _PetProfileState extends State<PetProfile> {
                 children: <Widget>[
                   ListTile(
                       title: Text("Pick from Gallery"),
-                      onTap: () {
-                        //File image = (await ImagePicker()
-                        //    .pickImage(source: ImageSource.gallery)) as File;
-                        _loadPicker(ImageSource.gallery);
+                      onTap: () async {
+                        await _loadPicker(ImageSource.gallery);
                         uploadImageToFirebase();
-                        // if (_formKey.currentState?.validate() ?? false) {
-                        //   Navigator.of(context).pop();
-
-                        //   widget.pet.profileImage =
-                        //       profileImage ?? widget.pet.profileImage;
-                        //   repository.updatePet(widget.pet);
-                        // }
                       }),
                   ListTile(
                       title: Text("Take a picture"),
                       onTap: () async {
-                        print("befor load");
                         await _loadPicker(ImageSource.camera);
-                        print("after load, picked: ");
-                        print(_pickedImage);
                         uploadImageToFirebase();
-                        // if (_formKey.currentState?.validate() ?? false) {
-                        //   Navigator.of(context).pop();
-
-                        //   widget.pet.profileImage =
-                        //       profileImage ?? widget.pet.profileImage;
-                        //   repository.updatePet(widget.pet);
-                        // }
                       })
                 ],
               ),
@@ -544,17 +469,12 @@ class _PetProfileState extends State<PetProfile> {
   }
 
   Future uploadImageToFirebase() async {
-    print("in uploadImage");
-    print("pickedImage: ");
-    print(_pickedImage);
     FirebaseStorage storage = FirebaseStorage.instance;
 
     File? file = File(_pickedImage!.path);
     Reference ref = storage.ref().child('profile/${Path.basename(file.path)}}');
-    print("befor uploaded");
     UploadTask uploadTask = ref.putFile(file);
     await uploadTask;
-    print('File Uploaded');
     ref.getDownloadURL().then((fileURL) {
       setState(() {
         profileImage = fileURL;

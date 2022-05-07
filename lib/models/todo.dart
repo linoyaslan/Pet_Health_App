@@ -11,8 +11,8 @@ class Todo {
   String id;
   String description;
   bool isDone;
-  //String? uid;
-  //String? pid;
+  String? uid;
+  String? pid;
 
   Todo({
     required this.createdTime,
@@ -20,8 +20,8 @@ class Todo {
     this.description = '',
     this.id = '',
     this.isDone = false,
-    //this.uid,
-    //this.pid,
+    this.uid,
+    this.pid,
   });
 
   factory Todo.fromSnapshot(DocumentSnapshot snapshot) {
@@ -36,8 +36,8 @@ class Todo {
         description: json['description'],
         id: json['id'],
         isDone: json['isDone'],
-        //uid: json['uid'],
-        // pid: json['pid'],
+        uid: json['uid'],
+        pid: json['pid'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,7 +46,7 @@ class Todo {
         'description': description,
         'id': id,
         'isDone': isDone,
-        // 'uid': uid,
-        // 'pid': pid,
+        'uid': uid,
+        'pid': pid,
       };
 }

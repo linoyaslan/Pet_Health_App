@@ -195,7 +195,8 @@ class _AddPetDialogState extends State<AddPetDialog> {
                       gender: characterGender,
                       birthday: birthday,
                       vaccinations: [],
-                      bathes: []);
+                      bathes: [],
+                      gallery: []);
                   repository.addPet(newPet);
                   Navigator.of(context).pop();
                 }
