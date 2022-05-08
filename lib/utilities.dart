@@ -85,3 +85,43 @@ Future<NotificationWeekAndTime?> pickSchedule(
   }
   return null;
 }
+
+class NotificationEveryDayAtTime {
+  final TimeOfDay timeOfDay;
+
+  NotificationEveryDayAtTime({
+    required this.timeOfDay,
+  });
+}
+
+Future<NotificationEveryDayAtTime?> pickScheduleEveryDay(
+  BuildContext context,
+) async {
+  TimeOfDay? timeOfDay;
+  DateTime now = DateTime.now();
+
+    timeOfDay = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(
+          now.add(
+            Duration(minutes: 1),
+          ),
+        ),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData(
+              colorScheme: ColorScheme.light(
+                primary: Colors.teal,
+              ),
+            ),
+            child: child!,
+          );
+        });
+
+    if (timeOfDay != null) {
+      return NotificationEveryDayAtTime(
+          timeOfDay: timeOfDay);
+    
+  }
+  return null;
+}

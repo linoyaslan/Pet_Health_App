@@ -305,7 +305,7 @@ class _PetProfileState extends State<PetProfile> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                MedicalHome()));
+                                                MedicalHome(pet: widget.pet)));
                                   },
                                 ),
                               ),
@@ -414,7 +414,7 @@ class _PetProfileState extends State<PetProfile> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                GeneralHome()));
+                                                GeneralHome(pet: widget.pet)));
                                   },
                                 ),
                               ),
