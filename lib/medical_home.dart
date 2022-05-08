@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pet_health_app/models/pet.dart';
+import 'package:pet_health_app/upload_and_download_docs/docs_bottom_bar.dart';
 
 class MedicalHome extends StatefulWidget {
-  const MedicalHome({Key? key}) : super(key: key);
+  final Pet pet;
+  const MedicalHome({Key? key, required this.pet}) : super(key: key);
 
   @override
   _MedicalHomeState createState() => _MedicalHomeState();
@@ -76,7 +79,14 @@ class _MedicalHomeState extends State<MedicalHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DocsBottomBar(
+                                              pet: widget.pet,
+                                              subject: "Medical")));
+                                },
                               ),
                             ),
                           ),

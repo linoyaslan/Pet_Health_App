@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/Hygiene/bath_list.dart';
+import 'package:pet_health_app/models/teeth.dart';
 import 'package:pet_health_app/models/vaccination.dart';
 import 'package:pet_health_app/models/bath.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,11 +20,13 @@ class Pet {
   String type;
   List<Vaccination> vaccinations;
   List<Bath> bathes;
+  List<Teeth> teeth;
   String? referenceId;
   String? profileImage;
   String gender;
   DateTime birthday;
   List<String>? gallery;
+  List<String>? medicalDocs;
 
   Pet(
     this.name, {
@@ -35,9 +38,11 @@ class Pet {
         'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
     required this.vaccinations,
     required this.bathes,
+    required this.teeth,
     required this.gender,
     required this.birthday,
     this.gallery,
+    this.medicalDocs,
   });
 
   factory Pet.fromSnapshot(DocumentSnapshot snapshot) {

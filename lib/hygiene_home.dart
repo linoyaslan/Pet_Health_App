@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pet_health_app/Hygiene/teeth_list.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'Hygiene/bath_list.dart';
 
@@ -183,7 +184,13 @@ class _HygieneHomeState extends State<HygieneHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TeethList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),

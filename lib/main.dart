@@ -18,7 +18,7 @@ Future main() async {
       NotificationChannel(
           channelKey: 'basic_channel',
           channelName: 'Basic Notifications',
-          defaultColor: Colors.teal,
+          defaultColor: Colors.black,
           importance: NotificationImportance.High,
           channelShowBadge: true,
           soundSource:

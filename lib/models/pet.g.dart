@@ -20,10 +20,16 @@ Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
       bathes: (json['bathes'] as List<dynamic>)
           .map((e) => Bath.fromJson(e as Map<String, dynamic>))
           .toList(),
+      teeth: (json['teeth'] as List<dynamic>)
+          .map((e) => Teeth.fromJson(e as Map<String, dynamic>))
+          .toList(),
       gender: json['gender'] as String,
       birthday: DateTime.parse(json['birthday'] as String),
       gallery:
           (json['gallery'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      medicalDocs: (json['medicalDocs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
@@ -33,9 +39,11 @@ Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
       'type': instance.type,
       'vaccinations': instance.vaccinations.map((e) => e.toJson()).toList(),
       'bathes': instance.bathes.map((e) => e.toJson()).toList(),
+      'teeth': instance.teeth.map((e) => e.toJson()).toList(),
       'referenceId': instance.referenceId,
       'profileImage': instance.profileImage,
       'gender': instance.gender,
       'birthday': instance.birthday.toIso8601String(),
       'gallery': instance.gallery,
+      'medicalDocs': instance.medicalDocs,
     };

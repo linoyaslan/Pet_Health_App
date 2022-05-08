@@ -56,3 +56,24 @@ Future<void> createBathNotificationEveryMonth(
           // millisecond: 0,
           ));
 }
+
+Future<void> createTeethNotificationEveryDay(
+    NotificationEveryDayAtTime notificationEveryDayAtTime, Pet pet) async {
+  await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: createUniqueId(),
+        channelKey: 'basic_channel',
+        title: '${Emojis.household_toothbrush} Brush Teeth Reminder',
+        body: 'Remined you - It\'s time for brush\n${pet.name} teeth',
+        notificationLayout: NotificationLayout.Default,
+      ),
+      actionButtons: [
+        NotificationActionButton(key: 'MARK_DONE', label: 'Mark Done')
+      ],
+      schedule: NotificationCalendar(
+          hour: notificationEveryDayAtTime.timeOfDay.hour,
+          minute: notificationEveryDayAtTime.timeOfDay.minute,
+          second: 0,
+          millisecond: 0,
+          repeats: true));
+}
