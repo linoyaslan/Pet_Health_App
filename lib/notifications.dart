@@ -27,6 +27,25 @@ Future<void> createVaccinationNotification(
       ));
 }
 
+Future<void> birthdayNotification(Pet pet) async {
+  await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: createUniqueId(),
+        channelKey: 'basic_channel',
+        title: '${Emojis.activites_confetti_ball} Birthday Time !!',
+        body: 'Today is ${pet.name} birthday! Congrates!',
+        notificationLayout: NotificationLayout.Default,
+      ),
+      schedule: NotificationCalendar(
+        month: pet.birthday.month,
+        day: pet.birthday.day,
+        hour: 10,
+        minute: 57,
+        second: 0,
+        millisecond: 0,
+      ));
+}
+
 Future<void> createBathNotificationEveryMonth(
     NotificationWeekAndTime notificationWeekAndTime, Pet pet) async {
   await AwesomeNotifications().createNotification(

@@ -93,8 +93,8 @@ class _UploadFilesState extends State<UploadFiles> {
     final urlDownload =
         await snapshot.ref.getDownloadURL().then((fileURL) => setState(() {
               newFileOfMedicalDocs = fileURL;
-              widget.pet.medicalDocs!.add(newFileOfMedicalDocs!);
-              repository.updatePet(widget.pet);
+              // widget.pet.medicalDocs!.add(newFileOfMedicalDocs!);
+              // repository.updatePet(widget.pet);
             }));
 
     //print('Download-Link: $urlDownload');

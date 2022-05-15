@@ -31,7 +31,7 @@ class _ToDoHomeState extends State<ToDoHome> {
       appBar: AppBar(
         title: Text("To Do"),
       ),
-      backgroundColor: Color.fromARGB(255, 238, 247, 255),
+      backgroundColor: Colors.lightBlue[50],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.blue,
         currentIndex: selectedIndex,

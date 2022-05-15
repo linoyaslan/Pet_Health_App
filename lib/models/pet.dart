@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/Hygiene/bath_list.dart';
+import 'package:pet_health_app/models/height.dart';
 import 'package:pet_health_app/models/teeth.dart';
 import 'package:pet_health_app/models/vaccination.dart';
 import 'package:pet_health_app/models/bath.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pet_health_app/models/weight.dart';
 
 import 'vaccination.dart';
 
@@ -26,24 +28,24 @@ class Pet {
   String gender;
   DateTime birthday;
   List<String>? gallery;
-  List<String>? medicalDocs;
+  List<Weight>? weight;
+  List<Height>? height;
 
-  Pet(
-    this.name, {
-    this.notes,
-    this.uid,
-    required this.type,
-    this.referenceId,
-    this.profileImage =
-        'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
-    required this.vaccinations,
-    required this.bathes,
-    required this.teeth,
-    required this.gender,
-    required this.birthday,
-    this.gallery,
-    this.medicalDocs,
-  });
+  Pet(this.name,
+      {this.notes,
+      this.uid,
+      required this.type,
+      this.referenceId,
+      this.profileImage =
+          'https://www.creativefabrica.com/wp-content/uploads/2020/09/01/Dog-paw-vector-icon-logo-design-heart-Graphics-5223218-1-1-580x387.jpg',
+      required this.vaccinations,
+      required this.bathes,
+      required this.teeth,
+      required this.gender,
+      required this.birthday,
+      this.gallery,
+      this.weight,
+      this.height});
 
   factory Pet.fromSnapshot(DocumentSnapshot snapshot) {
     final newPet = Pet.fromJson(snapshot.data() as Map<String, dynamic>);

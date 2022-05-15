@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_health_app/general/statics_height.dart';
+import 'package:pet_health_app/general/statics_weight.dart';
 import 'package:pet_health_app/models/pet.dart';
-import 'package:pet_health_app/upload_and_download_docs/display_files.dart';
-import 'package:pet_health_app/upload_and_download_docs/upload_files.dart';
 
-class DocsBottomBar extends StatefulWidget {
+class MeasurementsBottomBar extends StatefulWidget {
   final Pet pet;
-  final String subject;
-  const DocsBottomBar({Key? key, required this.pet, required this.subject})
-      : super(key: key);
+  const MeasurementsBottomBar({Key? key, required this.pet}) : super(key: key);
 
   @override
-  State<DocsBottomBar> createState() => _DocsBottomBarState();
+  State<MeasurementsBottomBar> createState() => _MeasurementsBottomBarState();
 }
 
-class _DocsBottomBarState extends State<DocsBottomBar> {
+class _MeasurementsBottomBarState extends State<MeasurementsBottomBar> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      UploadFiles(
+      StaticsWeight(
         pet: widget.pet,
-        subject: widget.subject,
+        subject: "weight",
       ),
-      DisplayFiles(pet: widget.pet, subject: widget.subject),
+      StaticsHeight(
+        pet: widget.pet,
+        subject: "height",
+      ),
     ];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.subject + " Docs"),
+        title: Text("Measurements"),
       ),
       body: Center(
         child: _widgetOptions.elementAt(selectedIndex),
@@ -39,12 +39,12 @@ class _DocsBottomBarState extends State<DocsBottomBar> {
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.cloud_upload_outlined),
-            label: 'Upload',
+            icon: Icon(FontAwesomeIcons.weight, size: 19),
+            label: 'Weight',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.fileAlt),
-            label: widget.pet.name + '\'s ' + widget.subject + ' Docs',
+            icon: Icon(Icons.height),
+            label: 'Height',
           ),
         ],
       ),

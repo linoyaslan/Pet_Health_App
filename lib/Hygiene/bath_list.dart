@@ -188,7 +188,9 @@ class _BathListState extends State<BathList> {
                           title: Text(dateFormat.format(item)),
                           subtitle: Text(dateFormat
                                   .format(bathList[index].date) +
-                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')));
+                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')
+                              )
+                              );
                 }),
           ),
           Row(

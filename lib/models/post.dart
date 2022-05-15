@@ -6,6 +6,10 @@ import 'package:pet_health_app/models/comment.dart';
 part 'post.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+class PostField {
+  static const date = 'date';
+}
+
 class Post {
   String headline;
   String body;

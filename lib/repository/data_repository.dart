@@ -31,6 +31,7 @@ class DataRepository {
   Stream<QuerySnapshot> getForumStream(String forumName) {
     return FirebaseFirestore.instance
         .collection('Forum' + forumName)
+        .orderBy(PostField.date, descending: false)
         .snapshots();
   }
 
