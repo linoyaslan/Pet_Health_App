@@ -26,36 +26,130 @@ class _AddVaccinationState extends State<AddVaccination> {
   var vaccination = '';
   late DateTime vaccinationDate;
   late int vaccinationHour;
+  late int year;
+  late int numOfWeeks;
+  late int numOfMonths;
   String dropdownValue = 'Select Vaccin';
   List<String> vaccinList = <String>[];
   @override
   void initState() {
+    year = (DateTime.now().year - widget.pet.birthday.year);
+    numOfWeeks = (DateTime.now().month - widget.pet.birthday.month) * 4;
+    numOfMonths = (DateTime.now().month - widget.pet.birthday.month);
     pet = widget.pet;
     super.initState();
   }
 
   List<DropdownMenuItem<String>> vaccinSuitToPetType() {
     if (pet.type == 'dog') {
-      return <String>[
-        'Select Vaccin',
-        'Rabies',
-        'Distemper',
-        'Hepatitis/Adenovirus',
-        'Parvovirus',
-        'Parainfluenza',
-        'Bordetella',
-        'Leptospirosis',
-        'Lyme Disease',
-        'Coronavirus',
-        'Giardia',
-        'Canine Influenza H3N8',
-        'Rattlesnake vaccine'
-      ].map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList();
+      if (year < 1) {
+        if (numOfWeeks < 6) {
+          return <String>[
+            'Select Vaccin',
+            'No Vaccin in this age',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        } else if (numOfWeeks >= 6 && numOfWeeks <= 8) {
+          return <String>[
+            'Select Vaccin',
+            'Distemper',
+            'Parvovirus',
+            'Bordetella',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        } else if (numOfWeeks >= 10 && numOfWeeks <= 12) {
+          return <String>[
+            'Select Vaccin',
+            'Distemper',
+            'Adenovirus',
+            'Parainfluenza',
+            'Parvovirus',
+            'Influenza',
+            'Leptospirosis',
+            'Bordetella',
+            'Lyme disease',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        } else if (numOfWeeks >= 16 && numOfWeeks <= 18) {
+          return <String>[
+            'Select Vaccin',
+            'Distemper',
+            'Adenovirus',
+            'Parainfluenza',
+            'Parvovirus',
+            'Rabies',
+            'Influenza',
+            'Leptospirosis',
+            'Bordetella',
+            'Lyme disease',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        }
+      } else {
+        if (numOfMonths >= 12 && numOfMonths <= 16) {
+          return <String>[
+            'Select Vaccin',
+            'Distemper',
+            'Adenovirus',
+            'Parainfluenza',
+            'Parvovirus',
+            'Rabies',
+            'Coronavirus',
+            'Leptospirosis',
+            'Bordetella',
+            'Lyme disease',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        } else if (year >= 1 && year <= 2) {
+          return <String>[
+            'Select Vaccin',
+            'Distemper',
+            'Adenovirus',
+            'Parainfluenza',
+            'Parvovirus',
+            'Influenza',
+            'Coronavirus',
+            'Leptospirosis',
+            'Bordetella',
+            'Lyme disease',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        } else if (year >= 3) {
+          return <String>[
+            'Select Vaccin',
+            'Rabies',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList();
+        }
+      }
     } else if (pet.type == 'cat') {
       return <String>[
         'Select Vaccin',
@@ -99,21 +193,6 @@ class _AddVaccinationState extends State<AddVaccination> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               children: <Widget>[
-                // UserTextField(
-                //   name: 'vaccination',
-                //   initialValue: '',
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Enter the Vaccination Name';
-                //     }
-                //   },
-                //   inputType: TextInputType.text,
-                //   onChanged: (value) {
-                //     if (value != null) {
-                //       vaccination = value;
-                //     }
-                //   },
-                // ),
                 DropdownButton<String>(
                     value: dropdownValue,
                     icon: const Icon(Icons.arrow_downward),
@@ -144,7 +223,6 @@ class _AddVaccinationState extends State<AddVaccination> {
                   onPressed: _selectTime,
                   child: Text("Choose Time"),
                 ),
-
                 VaccinatedCheckBox(
                     name: 'Given',
                     value: done,

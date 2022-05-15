@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_health_app/notifications.dart';
 
 import 'models/pet.dart';
 import 'repository/data_repository.dart';
@@ -189,17 +190,21 @@ class _AddPetDialogState extends State<AddPetDialog> {
                     character != null &&
                     characterGender != null &&
                     birthday != null) {
-                  final newPet = Pet(petName!,
-                      uid: user!.uid,
-                      type: character,
-                      gender: characterGender,
-                      birthday: birthday,
-                      vaccinations: [],
-                      bathes: [],
-                      gallery: [],
-                      teeth: [],
-                      medicalDocs: []);
+                  final newPet = Pet(
+                    petName!,
+                    uid: user!.uid,
+                    type: character,
+                    gender: characterGender,
+                    birthday: birthday,
+                    vaccinations: [],
+                    bathes: [],
+                    gallery: [],
+                    teeth: [],
+                    weight: [],
+                    height: [],
+                  );
                   repository.addPet(newPet);
+                  birthdayNotification(newPet);
                   Navigator.of(context).pop();
                 }
               },

@@ -27,8 +27,11 @@ Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
       birthday: DateTime.parse(json['birthday'] as String),
       gallery:
           (json['gallery'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      medicalDocs: (json['medicalDocs'] as List<dynamic>?)
-          ?.map((e) => e as String)
+      weight: (json['weight'] as List<dynamic>?)
+          ?.map((e) => Weight.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      height: (json['height'] as List<dynamic>?)
+          ?.map((e) => Height.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -45,5 +48,6 @@ Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
       'gender': instance.gender,
       'birthday': instance.birthday.toIso8601String(),
       'gallery': instance.gallery,
-      'medicalDocs': instance.medicalDocs,
+      'weight': instance.weight?.map((e) => e.toJson()).toList(),
+      'height': instance.height?.map((e) => e.toJson()).toList(),
     };

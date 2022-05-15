@@ -28,7 +28,7 @@ class _HomeListState extends State<HomeList> {
 
   Widget _buildHome(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.brown[50],
+      backgroundColor: Colors.lightBlue[50],
       body: StreamBuilder<QuerySnapshot>(
           stream: repository.getStream(),
           builder: (context, snapshot) {
