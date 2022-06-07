@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_health_app/add_vaccination.dart';
 import 'package:pet_health_app/models/pet.dart';
+import 'package:pet_health_app/notifications.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/vaccination_details.dart';
 import 'package:pet_health_app/widgets/date_picker.dart';
@@ -211,6 +212,39 @@ class _VaccinationListState extends State<VaccinationList> {
                   );
                 }),
           ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(100, 0, 0, 40),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            textStyle: const TextStyle(fontSize: 16)),
+                        onPressed: () async {
+                          cancelScheduleNotifcations();
+                        },
+                        child: Row(
+                          children: [
+                            Text("Cancel Notifications "),
+                            const Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -229,41 +263,6 @@ class _VaccinationListState extends State<VaccinationList> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
-
-    // return Scaffold(
-    //     body: Column(
-    //   children: <Widget>[
-    //     const SizedBox(height: 6.0),
-    //     Padding(
-    //       padding: const EdgeInsets.all(8.0),
-    //       child: const Text(
-    //         'Vaccinations',
-    //         style: TextStyle(fontSize: 16.0),
-    //       ),
-    //     ),
-    //     ConstrainedBox(
-    //       constraints: const BoxConstraints(maxHeight: 200),
-    //       child: ListView.builder(
-    //         shrinkWrap: true,
-    //         padding: const EdgeInsets.all(16.0),
-    //         itemCount: widget.pet.vaccinations.length,
-    //         itemBuilder: (BuildContext context, int index) {
-    //           return widget.buildRow(widget.pet.vaccinations[index]);
-    //         },
-    //       ),
-    //     ),
-    //     FloatingActionButton(
-    //       backgroundColor: Colors.red[700],
-    //       onPressed: () {
-    //         _addVaccination(widget.pet, () {
-    //           setState(() {});
-    //         });
-    //       },
-    //       tooltip: 'Add Vaccination',
-    //       child: const Icon(Icons.add),
-    //     ),
-    //   ],
-    // ));
   }
 
   void _addVaccination(Pet pet, Function callback) {

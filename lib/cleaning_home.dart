@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pet_health_app/Cleaning/bed_list.dart';
+import 'package:pet_health_app/Cleaning/food_plate_list.dart';
+import 'package:pet_health_app/Cleaning/leash_and_collar_list.dart';
+import 'package:pet_health_app/Cleaning/toys_list.dart';
+import 'package:pet_health_app/Cleaning/water_list.dart';
+import 'package:pet_health_app/models/pet.dart';
 
 class CleaningHome extends StatefulWidget {
-  const CleaningHome({Key? key}) : super(key: key);
+  final Pet pet;
+  const CleaningHome({Key? key, required this.pet}) : super(key: key);
 
   @override
   _CleaningHomeState createState() => _CleaningHomeState();
@@ -44,7 +51,14 @@ class _CleaningHomeState extends State<CleaningHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LeashAndCollarList(
+                                                  pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),
@@ -76,7 +90,13 @@ class _CleaningHomeState extends State<CleaningHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ToysList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),
@@ -111,7 +131,13 @@ class _CleaningHomeState extends State<CleaningHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              BedList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),
@@ -144,7 +170,13 @@ class _CleaningHomeState extends State<CleaningHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              WaterList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),
@@ -176,7 +208,13 @@ class _CleaningHomeState extends State<CleaningHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              FoodPlateList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),

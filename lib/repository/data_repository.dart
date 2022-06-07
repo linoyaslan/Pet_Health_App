@@ -7,12 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:pet_health_app/models/post.dart';
 import 'package:pet_health_app/models/vaccination.dart';
 
+import '../calendar/event.dart';
 import '../models/pet.dart';
 
 class DataRepository {
   // 1
   final CollectionReference collection =
       FirebaseFirestore.instance.collection('pet');
+
+  final CollectionReference collectionEvent =
+      FirebaseFirestore.instance.collection('event');
 
   final CollectionReference collectionForumDogs =
       FirebaseFirestore.instance.collection('ForumDogs');
@@ -38,6 +42,10 @@ class DataRepository {
   // 3
   Future<DocumentReference> addPet(Pet pet) {
     return collection.add(pet.toJson());
+  }
+
+  Future<DocumentReference> addEvent(Event event) {
+    return collectionEvent.add(event.toJson());
   }
 
   Future<DocumentReference> addPost(Post post, String forumName) {

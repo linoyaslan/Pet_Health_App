@@ -188,15 +188,14 @@ class _BathListState extends State<BathList> {
                           title: Text(dateFormat.format(item)),
                           subtitle: Text(dateFormat
                                   .format(bathList[index].date) +
-                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')
-                              )
-                              );
+                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')));
                 }),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(162, 0, 160, 40),
+                padding: const EdgeInsets.fromLTRB(17, 0, 0, 40),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -217,6 +216,35 @@ class _BathListState extends State<BathList> {
                         child: const Icon(
                           Icons.doorbell,
                           color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 40),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            textStyle: const TextStyle(fontSize: 16)),
+                        onPressed: () async {
+                          cancelScheduleNotifcations();
+                        },
+                        child: Row(
+                          children: [
+                            Text("Cancel Notifications "),
+                            const Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
                         ),
                       ),
                     ],

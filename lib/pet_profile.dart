@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_health_app/cleaning_home.dart';
+import 'package:pet_health_app/food/food_list.dart';
 import 'package:pet_health_app/general_home.dart';
 import 'package:pet_health_app/hygiene_home.dart';
 import 'package:pet_health_app/medical_home.dart';
@@ -312,7 +313,13 @@ class _PetProfileState extends State<PetProfile> {
                                     ),
                                     iconSize: 50,
                                     color: Colors.white,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FoodList(pet: widget.pet)));
+                                    },
                                   ),
                                 ),
                               ),
@@ -385,7 +392,8 @@ class _PetProfileState extends State<PetProfile> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CleaningHome()));
+                                                  CleaningHome(
+                                                      pet: widget.pet)));
                                     },
                                   ),
                                 ),

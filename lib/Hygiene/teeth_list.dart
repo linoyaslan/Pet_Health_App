@@ -192,9 +192,10 @@ class _TeethListState extends State<TeethList> {
                 }),
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(162, 0, 160, 40),
+                padding: const EdgeInsets.fromLTRB(17, 0, 0, 40),
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -221,25 +222,35 @@ class _TeethListState extends State<TeethList> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(0, 0, 5, 30),
-              //   child: Center(
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: <Widget>[
-              //         const SizedBox(height: 30),
-              //         ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               textStyle: const TextStyle(fontSize: 20)),
-              //           onPressed: () {
-              //             //createBathNotificationEveryMonth(widget.pet);
-              //           },
-              //           child: const Text('Remined'),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 0, 40),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            textStyle: const TextStyle(fontSize: 16)),
+                        onPressed: () async {
+                          cancelScheduleNotifcations();
+                        },
+                        child: Row(
+                          children: [
+                            Text("Cancel Notifications "),
+                            const Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           )
         ],
