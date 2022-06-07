@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_health_app/Hygiene/add_bath.dart';
-import 'package:pet_health_app/models/bath.dart';
+import 'package:pet_health_app/Hygiene/add_hair.dart';
+import 'package:pet_health_app/models/hair.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:intl/intl.dart';
 import 'package:pet_health_app/notifications.dart';
@@ -9,24 +9,24 @@ import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/widgets/date_picker.dart';
 import 'package:pet_health_app/utilities.dart';
 
-class BathList extends StatefulWidget {
+class HairList extends StatefulWidget {
   final Pet pet;
-  const BathList({Key? key, required this.pet}) : super(key: key);
+  const HairList({Key? key, required this.pet}) : super(key: key);
 
   @override
-  _BathListState createState() => _BathListState();
+  _HairListState createState() => _HairListState();
 }
 
-class _BathListState extends State<BathList> {
-  late List<Bath> bathList;
+class _HairListState extends State<HairList> {
+  late List<Hair> hairList;
   late DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   late Pet pet;
-  late DateTime bathDate;
+  late DateTime hairDate;
   final _formKey = GlobalKey<FormState>();
   final DataRepository repository = DataRepository();
   void initState() {
     pet = widget.pet;
-    bathList = widget.pet.bathes;
+    hairList = widget.pet.hair;
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _BathListState extends State<BathList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Bath"),
+        title: Text("Hair"),
       ),
       body: Column(
         children: [
@@ -45,12 +45,12 @@ class _BathListState extends State<BathList> {
               text: TextSpan(children: [
                 WidgetSpan(
                   child: Icon(
-                    FontAwesomeIcons.bath,
+                    FontAwesomeIcons.handScissors,
                     color: Colors.blueAccent,
                   ),
                 ),
                 TextSpan(
-                    text: '   Bathes',
+                    text: '   Hair',
                     style: TextStyle(
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.w500,
@@ -61,14 +61,14 @@ class _BathListState extends State<BathList> {
           ),
           Expanded(
             child: ListView.separated(
-                itemCount: bathList.length,
+                itemCount: hairList.length,
                 padding: const EdgeInsets.all(5.0),
                 separatorBuilder: (context, index) => Divider(
                       height: 2.0,
                       color: Colors.black87,
                     ),
                 itemBuilder: (context, index) {
-                  final item = bathList[index].date;
+                  final item = hairList[index].date;
                   return Dismissible(
                       key: UniqueKey(),
                       background: Container(
@@ -106,7 +106,7 @@ class _BathListState extends State<BathList> {
                               return AlertDialog(
                                 title: const Text("Delete Confirmation"),
                                 content: const Text(
-                                    "Are you sure you want to delete this bath?"),
+                                    "Are you sure you want to delete this hair?"),
                                 actions: <Widget>[
                                   FlatButton(
                                       onPressed: () =>
@@ -126,7 +126,7 @@ class _BathListState extends State<BathList> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: const Text('Bath'),
+                                    title: const Text('Hair'),
                                     content: SingleChildScrollView(
                                       child: Form(
                                         key: _formKey,
@@ -143,7 +143,7 @@ class _BathListState extends State<BathList> {
                                                   }
                                                 },
                                                 onChanged: (text) {
-                                                  bathDate = text;
+                                                  hairDate = text;
                                                 }),
                                           ],
                                         ),
@@ -178,7 +178,7 @@ class _BathListState extends State<BathList> {
                           if (direction == DismissDirection.startToEnd) {
                             print('');
                           } else {
-                            bathList.removeAt(index);
+                            hairList.removeAt(index);
                           }
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -187,8 +187,8 @@ class _BathListState extends State<BathList> {
                       child: ListTile(
                           title: Text(dateFormat.format(item)),
                           subtitle: Text(dateFormat
-                                  .format(bathList[index].date) +
-                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')));
+                                  .format(hairList[index].date) +
+                              ' at ${hairList[index].hour}:${hairList[index].minutes > 9 ? hairList[index].minutes : '0' + (hairList[index].minutes).toString()}')));
                 }),
           ),
           Row(
@@ -209,8 +209,8 @@ class _BathListState extends State<BathList> {
                           NotificationWeekAndTime? pickedSchedule =
                               await pickSchedule(context);
                           if (pickedSchedule != null) {
-                            createBathNotificationEveryMonth(
-                                pickedSchedule, widget.pet);
+                            createHygieneNotification(
+                                pickedSchedule, widget.pet, "Hair");
                           }
                         },
                         child: const Icon(
@@ -251,25 +251,6 @@ class _BathListState extends State<BathList> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(0, 0, 5, 30),
-              //   child: Center(
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: <Widget>[
-              //         const SizedBox(height: 30),
-              //         ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               textStyle: const TextStyle(fontSize: 20)),
-              //           onPressed: () {
-              //             //createBathNotificationEveryMonth(widget.pet);
-              //           },
-              //           child: const Text('Remined'),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           )
         ],
@@ -281,34 +262,22 @@ class _BathListState extends State<BathList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          _addBath(widget.pet, () {
+          _addHair(widget.pet, () {
             setState(() {});
           });
         },
-        tooltip: 'Add Bath',
+        tooltip: 'Add Hair',
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  void _addBath(Pet pet, Function callback) {
+  void _addHair(Pet pet, Function callback) {
     showDialog<Widget>(
         context: context,
         builder: (BuildContext context) {
-          return AddBath(pet: pet, callback: callback);
+          return AddHair(pet: pet, callback: callback);
         });
-  }
-
-  Widget buildRow(Bath bath) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(bath.date.toString()),
-        ),
-        Text(dateFormat.format(bath.date)),
-      ],
-    );
   }
 }

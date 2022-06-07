@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_health_app/Hygiene/add_bath.dart';
-import 'package:pet_health_app/models/bath.dart';
+import 'package:pet_health_app/general/add_walk.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:intl/intl.dart';
+import 'package:pet_health_app/models/walk.dart';
 import 'package:pet_health_app/notifications.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/widgets/date_picker.dart';
-import 'package:pet_health_app/utilities.dart';
 
-class BathList extends StatefulWidget {
+class WalkList extends StatefulWidget {
   final Pet pet;
-  const BathList({Key? key, required this.pet}) : super(key: key);
+  const WalkList({Key? key, required this.pet}) : super(key: key);
 
   @override
-  _BathListState createState() => _BathListState();
+  State<WalkList> createState() => _WalkListState();
 }
 
-class _BathListState extends State<BathList> {
-  late List<Bath> bathList;
+class _WalkListState extends State<WalkList> {
+  late List<Walk> walkList;
   late DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   late Pet pet;
-  late DateTime bathDate;
+  late DateTime walkDate;
   final _formKey = GlobalKey<FormState>();
   final DataRepository repository = DataRepository();
+  late int walkHourRemined;
+  late int walkMinuteRemined;
   void initState() {
     pet = widget.pet;
-    bathList = widget.pet.bathes;
+    walkList = widget.pet.walk;
     super.initState();
   }
 
@@ -35,7 +36,7 @@ class _BathListState extends State<BathList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Bath"),
+        title: Text("Walk"),
       ),
       body: Column(
         children: [
@@ -45,12 +46,12 @@ class _BathListState extends State<BathList> {
               text: TextSpan(children: [
                 WidgetSpan(
                   child: Icon(
-                    FontAwesomeIcons.bath,
+                    FontAwesomeIcons.walking,
                     color: Colors.blueAccent,
                   ),
                 ),
                 TextSpan(
-                    text: '   Bathes',
+                    text: '   Walk',
                     style: TextStyle(
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.w500,
@@ -61,14 +62,14 @@ class _BathListState extends State<BathList> {
           ),
           Expanded(
             child: ListView.separated(
-                itemCount: bathList.length,
+                itemCount: walkList.length,
                 padding: const EdgeInsets.all(5.0),
                 separatorBuilder: (context, index) => Divider(
                       height: 2.0,
                       color: Colors.black87,
                     ),
                 itemBuilder: (context, index) {
-                  final item = bathList[index].date;
+                  final item = walkList[index].date;
                   return Dismissible(
                       key: UniqueKey(),
                       background: Container(
@@ -106,7 +107,7 @@ class _BathListState extends State<BathList> {
                               return AlertDialog(
                                 title: const Text("Delete Confirmation"),
                                 content: const Text(
-                                    "Are you sure you want to delete this bath?"),
+                                    "Are you sure you want to delete this walk?"),
                                 actions: <Widget>[
                                   FlatButton(
                                       onPressed: () =>
@@ -126,7 +127,7 @@ class _BathListState extends State<BathList> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: const Text('Bath'),
+                                    title: const Text('Walk'),
                                     content: SingleChildScrollView(
                                       child: Form(
                                         key: _formKey,
@@ -143,7 +144,7 @@ class _BathListState extends State<BathList> {
                                                   }
                                                 },
                                                 onChanged: (text) {
-                                                  bathDate = text;
+                                                  walkDate = text;
                                                 }),
                                           ],
                                         ),
@@ -178,7 +179,7 @@ class _BathListState extends State<BathList> {
                           if (direction == DismissDirection.startToEnd) {
                             print('');
                           } else {
-                            bathList.removeAt(index);
+                            walkList.removeAt(index);
                           }
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -187,8 +188,8 @@ class _BathListState extends State<BathList> {
                       child: ListTile(
                           title: Text(dateFormat.format(item)),
                           subtitle: Text(dateFormat
-                                  .format(bathList[index].date) +
-                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')));
+                                  .format(walkList[index].date) +
+                              ' at ${walkList[index].hour}:${walkList[index].minutes > 9 ? walkList[index].minutes : '0' + (walkList[index].minutes).toString()}')));
                 }),
           ),
           Row(
@@ -206,12 +207,121 @@ class _BathListState extends State<BathList> {
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20)),
                         onPressed: () async {
-                          NotificationWeekAndTime? pickedSchedule =
-                              await pickSchedule(context);
-                          if (pickedSchedule != null) {
-                            createBathNotificationEveryMonth(
-                                pickedSchedule, widget.pet);
-                          }
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'I want to walk my dog:',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Wrap(
+                                    alignment: WrapAlignment.center,
+                                    spacing: 3,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child:
+                                                            Text("Choose Time"),
+                                                      )
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("Once"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "   Choose Time for first walking   "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "Choose Time for second walking"),
+                                                      ),
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("Twice"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "    Choose Time for first walking    "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            " Choose Time for second walking "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "   Choose Time for third walking   "),
+                                                      ),
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("3 times"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
                         },
                         child: const Icon(
                           Icons.doorbell,
@@ -251,25 +361,6 @@ class _BathListState extends State<BathList> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(0, 0, 5, 30),
-              //   child: Center(
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: <Widget>[
-              //         const SizedBox(height: 30),
-              //         ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               textStyle: const TextStyle(fontSize: 20)),
-              //           onPressed: () {
-              //             //createBathNotificationEveryMonth(widget.pet);
-              //           },
-              //           child: const Text('Remined'),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           )
         ],
@@ -281,34 +372,36 @@ class _BathListState extends State<BathList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          _addBath(widget.pet, () {
+          _addWalk(widget.pet, () {
             setState(() {});
           });
         },
-        tooltip: 'Add Bath',
+        tooltip: 'Add Walk',
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  void _addBath(Pet pet, Function callback) {
+  void _addWalk(Pet pet, Function callback) {
     showDialog<Widget>(
         context: context,
         builder: (BuildContext context) {
-          return AddBath(pet: pet, callback: callback);
+          return AddWalk(pet: pet, callback: callback);
         });
   }
 
-  Widget buildRow(Bath bath) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(bath.date.toString()),
-        ),
-        Text(dateFormat.format(bath.date)),
-      ],
+  Future<void> _selectTime() async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
     );
+    if (timeOfDay != null) {
+      setState(() {
+        walkHourRemined = timeOfDay.hour;
+        walkMinuteRemined = timeOfDay.minute;
+      });
+    }
+    createWalkNotificationEveryDay(walkHourRemined, walkMinuteRemined, pet);
   }
 }

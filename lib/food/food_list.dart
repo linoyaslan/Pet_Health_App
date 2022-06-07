@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pet_health_app/Hygiene/add_bath.dart';
-import 'package:pet_health_app/models/bath.dart';
+import 'package:pet_health_app/food/add_food.dart';
+import 'package:pet_health_app/models/food.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:intl/intl.dart';
 import 'package:pet_health_app/notifications.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
 import 'package:pet_health_app/widgets/date_picker.dart';
-import 'package:pet_health_app/utilities.dart';
 
-class BathList extends StatefulWidget {
+class FoodList extends StatefulWidget {
   final Pet pet;
-  const BathList({Key? key, required this.pet}) : super(key: key);
+  const FoodList({Key? key, required this.pet}) : super(key: key);
 
   @override
-  _BathListState createState() => _BathListState();
+  State<FoodList> createState() => _FoodListState();
 }
 
-class _BathListState extends State<BathList> {
-  late List<Bath> bathList;
+class _FoodListState extends State<FoodList> {
+  late List<Food> foodList;
   late DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   late Pet pet;
-  late DateTime bathDate;
+  late DateTime foodDate;
   final _formKey = GlobalKey<FormState>();
   final DataRepository repository = DataRepository();
+  late int foodHourRemined;
+  late int foodMinuteRemined;
   void initState() {
     pet = widget.pet;
-    bathList = widget.pet.bathes;
+    foodList = widget.pet.food;
     super.initState();
   }
 
@@ -35,7 +36,7 @@ class _BathListState extends State<BathList> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text("Bath"),
+        title: Text("Food"),
       ),
       body: Column(
         children: [
@@ -45,12 +46,12 @@ class _BathListState extends State<BathList> {
               text: TextSpan(children: [
                 WidgetSpan(
                   child: Icon(
-                    FontAwesomeIcons.bath,
+                    FontAwesomeIcons.bone,
                     color: Colors.blueAccent,
                   ),
                 ),
                 TextSpan(
-                    text: '   Bathes',
+                    text: '   Food',
                     style: TextStyle(
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.w500,
@@ -61,14 +62,14 @@ class _BathListState extends State<BathList> {
           ),
           Expanded(
             child: ListView.separated(
-                itemCount: bathList.length,
+                itemCount: foodList.length,
                 padding: const EdgeInsets.all(5.0),
                 separatorBuilder: (context, index) => Divider(
                       height: 2.0,
                       color: Colors.black87,
                     ),
                 itemBuilder: (context, index) {
-                  final item = bathList[index].date;
+                  final item = foodList[index].date;
                   return Dismissible(
                       key: UniqueKey(),
                       background: Container(
@@ -106,7 +107,7 @@ class _BathListState extends State<BathList> {
                               return AlertDialog(
                                 title: const Text("Delete Confirmation"),
                                 content: const Text(
-                                    "Are you sure you want to delete this bath?"),
+                                    "Are you sure you want to delete this food?"),
                                 actions: <Widget>[
                                   FlatButton(
                                       onPressed: () =>
@@ -126,7 +127,7 @@ class _BathListState extends State<BathList> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                    title: const Text('Bath'),
+                                    title: const Text('Food'),
                                     content: SingleChildScrollView(
                                       child: Form(
                                         key: _formKey,
@@ -143,7 +144,7 @@ class _BathListState extends State<BathList> {
                                                   }
                                                 },
                                                 onChanged: (text) {
-                                                  bathDate = text;
+                                                  foodDate = text;
                                                 }),
                                           ],
                                         ),
@@ -178,17 +179,21 @@ class _BathListState extends State<BathList> {
                           if (direction == DismissDirection.startToEnd) {
                             print('');
                           } else {
-                            bathList.removeAt(index);
+                            foodList.removeAt(index);
                           }
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('$item deleted')));
                       },
                       child: ListTile(
-                          title: Text(dateFormat.format(item)),
+                          title: Text((foodList[index].amount).toString() +
+                              " gr of " +
+                              foodList[index].foodName +
+                              " given at " +
+                              dateFormat.format(item)),
                           subtitle: Text(dateFormat
-                                  .format(bathList[index].date) +
-                              ' at ${bathList[index].hour}:${bathList[index].minutes > 9 ? bathList[index].minutes : '0' + (bathList[index].minutes).toString()}')));
+                                  .format(foodList[index].date) +
+                              ' at ${foodList[index].hour}:${foodList[index].minutes > 9 ? foodList[index].minutes : '0' + (foodList[index].minutes).toString()}')));
                 }),
           ),
           Row(
@@ -206,12 +211,127 @@ class _BathListState extends State<BathList> {
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20)),
                         onPressed: () async {
-                          NotificationWeekAndTime? pickedSchedule =
-                              await pickSchedule(context);
-                          if (pickedSchedule != null) {
-                            createBathNotificationEveryMonth(
-                                pickedSchedule, widget.pet);
-                          }
+                          await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'I want feed my dog:',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Wrap(
+                                    alignment: WrapAlignment.center,
+                                    spacing: 3,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child:
+                                                            Text("Choose Time"),
+                                                      )
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("Once"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "   Choose Time for first feeding   "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "Choose Time for second feeding"),
+                                                      ),
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("Twice"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                    content: Wrap(
+                                                        alignment: WrapAlignment
+                                                            .center,
+                                                        spacing: 3,
+                                                        children: [
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "    Choose Time for first feeding    "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            " Choose Time for second feeding "),
+                                                      ),
+                                                      ElevatedButton(
+                                                        onPressed: _selectTime,
+                                                        child: Text(
+                                                            "   Choose Time for third feeding   "),
+                                                      ),
+                                                    ]));
+                                              });
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                            Colors.blue,
+                                          ),
+                                        ),
+                                        child: Text("3 times"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              });
+                          // NotificationWeekAndTime? pickedSchedule =
+                          //     await pickSchedule(context);
+                          // if (pickedSchedule != null) {
+                          //   createBathNotificationEveryMonth(
+                          //       pickedSchedule, widget.pet);
+                          // }
                         },
                         child: const Icon(
                           Icons.doorbell,
@@ -251,25 +371,6 @@ class _BathListState extends State<BathList> {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.fromLTRB(0, 0, 5, 30),
-              //   child: Center(
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: <Widget>[
-              //         const SizedBox(height: 30),
-              //         ElevatedButton(
-              //           style: ElevatedButton.styleFrom(
-              //               textStyle: const TextStyle(fontSize: 20)),
-              //           onPressed: () {
-              //             //createBathNotificationEveryMonth(widget.pet);
-              //           },
-              //           child: const Text('Remined'),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ],
           )
         ],
@@ -281,34 +382,36 @@ class _BathListState extends State<BathList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          _addBath(widget.pet, () {
+          _addFood(widget.pet, () {
             setState(() {});
           });
         },
-        tooltip: 'Add Bath',
+        tooltip: 'Add Food',
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  void _addBath(Pet pet, Function callback) {
+  void _addFood(Pet pet, Function callback) {
     showDialog<Widget>(
         context: context,
         builder: (BuildContext context) {
-          return AddBath(pet: pet, callback: callback);
+          return AddFood(pet: pet, callback: callback);
         });
   }
 
-  Widget buildRow(Bath bath) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(bath.date.toString()),
-        ),
-        Text(dateFormat.format(bath.date)),
-      ],
+  Future<void> _selectTime() async {
+    final TimeOfDay? timeOfDay = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
     );
+    if (timeOfDay != null) {
+      setState(() {
+        foodHourRemined = timeOfDay.hour;
+        foodMinuteRemined = timeOfDay.minute;
+      });
+    }
+    createFoodNotificationEveryDay(foodHourRemined, foodMinuteRemined, pet);
   }
 }

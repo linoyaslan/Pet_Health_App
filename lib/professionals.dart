@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pet_health_app/blocks/application_block.dart';
@@ -42,8 +42,12 @@ class _ProfessionalsState extends State<Professionals> {
 
   @override
   void dispose() {
+    print("Linoy print: ");
+    print(context);
     final applicationBlock =
         Provider.of<ApplicationBlock>(context, listen: false);
+    print("Linoy print 2: ");
+    print(context);
     applicationBlock.dispose();
     _locationController.dispose();
     locationSubscription.cancel();
@@ -73,7 +77,7 @@ class _ProfessionalsState extends State<Professionals> {
                       suffixIcon: Icon(Icons.search),
                     ),
                     onChanged: (value) => applicationBlock.searchPlaces(value),
-                    //onTap: () => applicationBlock.clearSelectedLocation(),
+                    onTap: () => applicationBlock.clearSelectedLocation(),
                   ),
                 ),
                 Stack(
@@ -108,6 +112,13 @@ class _ProfessionalsState extends State<Professionals> {
                     if (applicationBlock.searchResults != null &&
                         applicationBlock.searchResults!.length != 0)
                       Container(
+                          height: 300.0,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(.6),
+                              backgroundBlendMode: BlendMode.darken)),
+                    if (applicationBlock.searchResults != null)
+                      Container(
                         height: 300.0,
                         child: ListView.builder(
                           itemCount:
@@ -117,7 +128,7 @@ class _ProfessionalsState extends State<Professionals> {
                               title: Text(
                                 applicationBlock
                                     .searchResults![index].description,
-                                style: TextStyle(color: Colors.black87),
+                                style: TextStyle(color: Colors.white),
                               ),
                               onTap: () {
                                 applicationBlock.setSelectedLocation(

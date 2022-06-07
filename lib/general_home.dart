@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pet_health_app/general/measurements_bottom_bar.dart';
+import 'package:pet_health_app/general/walk_list.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:pet_health_app/upload_and_download_docs/docs_bottom_bar.dart';
 
@@ -48,7 +49,13 @@ class _GeneralHomeState extends State<GeneralHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              WalkList(pet: widget.pet)));
+                                },
                               ),
                             ),
                           ),

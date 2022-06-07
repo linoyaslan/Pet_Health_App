@@ -190,19 +190,30 @@ class _AddPetDialogState extends State<AddPetDialog> {
                     character != null &&
                     characterGender != null &&
                     birthday != null) {
-                  final newPet = Pet(
-                    petName!,
-                    uid: user!.uid,
-                    type: character,
-                    gender: characterGender,
-                    birthday: birthday,
-                    vaccinations: [],
-                    bathes: [],
-                    gallery: [],
-                    teeth: [],
-                    weight: [],
-                    height: [],
-                  );
+                  final newPet = Pet(petName!,
+                      uid: user!.uid,
+                      type: character,
+                      gender: characterGender,
+                      birthday: birthday,
+                      vaccinations: [],
+                      bathes: [],
+                      gallery: [],
+                      food: [],
+                      teeth: [],
+                      weight: [],
+                      height: [],
+                      vetVisits: [],
+                      medications: [],
+                      leashesAndCollars: [],
+                      beds: [],
+                      foodPlate: [],
+                      waterFountain: [],
+                      toys: [],
+                      antiFlea: [],
+                      walk: [],
+                      hair: [],
+                      ears: [],
+                      nails: []);
                   repository.addPet(newPet);
                   birthdayNotification(newPet);
                   Navigator.of(context).pop();

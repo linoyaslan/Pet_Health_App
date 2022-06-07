@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pet_health_app/Medical/medications_list.dart';
+import 'package:pet_health_app/Medical/vet_visits_list.dart';
 import 'package:pet_health_app/models/pet.dart';
 import 'package:pet_health_app/upload_and_download_docs/docs_bottom_bar.dart';
 
@@ -47,7 +49,15 @@ class _MedicalHomeState extends State<MedicalHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  print("I am here");
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => VetVisitsList(
+                                                pet: widget.pet,
+                                              )));
+                                },
                               ),
                             ),
                           ),
@@ -124,7 +134,14 @@ class _MedicalHomeState extends State<MedicalHome> {
                                 ),
                                 iconSize: 50,
                                 color: Colors.white,
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MedicationList(
+                                                pet: widget.pet,
+                                              )));
+                                },
                               ),
                             ),
                           ),

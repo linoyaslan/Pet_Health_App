@@ -1,42 +1,37 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_health_app/add_vaccination.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pet_health_app/Medical/add_vet_visit.dart';
 import 'package:pet_health_app/models/pet.dart';
+import 'package:pet_health_app/models/vetVisits.dart';
+import 'package:intl/intl.dart';
 import 'package:pet_health_app/notifications.dart';
 import 'package:pet_health_app/repository/data_repository.dart';
-import 'package:pet_health_app/vaccination_details.dart';
 import 'package:pet_health_app/widgets/date_picker.dart';
 import 'package:pet_health_app/widgets/vaccinated_check_box.dart';
-import 'models/vaccination.dart';
-import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//import 'package:listview_utils/listview_utils.dart';
-//import 'package:flutter_icons/flutter_icons.dart';
 
-class VaccinationList extends StatefulWidget {
+class VetVisitsList extends StatefulWidget {
   final Pet pet;
-  //final Widget Function(Vaccination) buildRow;
-  const VaccinationList({Key? key, required this.pet}) : super(key: key);
+  const VetVisitsList({Key? key, required this.pet}) : super(key: key);
 
   @override
-  _VaccinationListState createState() => _VaccinationListState();
+  State<VetVisitsList> createState() => _VetVisitsListState();
 }
 
-class _VaccinationListState extends State<VaccinationList> {
+class _VetVisitsListState extends State<VetVisitsList> {
   late String name;
-  late List<Vaccination> vaccinstionsList;
+  late List<VetVistis> vetVisitsList;
   late DateFormat dateFormat = DateFormat('dd-MM-yyyy');
   late Pet pet;
-
   final _formKey = GlobalKey<FormState>();
   final DataRepository repository = DataRepository();
   bool? done;
-  var vaccination = '';
-  late DateTime vaccinationDate;
+  var clinicName = '';
+  var treatmeantType = '';
+  late DateTime vetVisitDate;
   @override
   void initState() {
     name = widget.pet.name;
-    vaccinstionsList = widget.pet.vaccinations;
+    vetVisitsList = widget.pet.vetVisits;
     done = false;
     pet = widget.pet;
     super.initState();
@@ -57,12 +52,12 @@ class _VaccinationListState extends State<VaccinationList> {
               text: TextSpan(children: [
                 WidgetSpan(
                   child: Icon(
-                    FontAwesomeIcons.syringe,
+                    Icons.sick,
                     color: Colors.blueAccent,
                   ),
                 ),
                 TextSpan(
-                    text: '   Vaccinctions',
+                    text: '   Vet Visits',
                     style: TextStyle(
                       color: Colors.blueGrey,
                       fontWeight: FontWeight.w500,
@@ -73,14 +68,14 @@ class _VaccinationListState extends State<VaccinationList> {
           ),
           Expanded(
             child: ListView.separated(
-                itemCount: vaccinstionsList.length,
+                itemCount: vetVisitsList.length,
                 padding: const EdgeInsets.all(5.0),
                 separatorBuilder: (context, index) => Divider(
                       height: 2.0,
                       color: Colors.black87,
                     ),
                 itemBuilder: (context, index) {
-                  final item = vaccinstionsList[index].vaccination;
+                  final item = vetVisitsList[index].treatmeantType;
                   return Dismissible(
                     key: UniqueKey(),
                     background: Container(
@@ -117,7 +112,7 @@ class _VaccinationListState extends State<VaccinationList> {
                             return AlertDialog(
                               title: const Text("Delete Confirmation"),
                               content: const Text(
-                                  "Are you sure you want to delete this vaccination?"),
+                                  "Are you sure you want to delete this ver visit?"),
                               actions: <Widget>[
                                 FlatButton(
                                     onPressed: () =>
@@ -137,7 +132,7 @@ class _VaccinationListState extends State<VaccinationList> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                  title: const Text('Vaccination'),
+                                  title: const Text('Vet Visits'),
                                   content: SingleChildScrollView(
                                     child: Form(
                                       key: _formKey,
@@ -150,16 +145,15 @@ class _VaccinationListState extends State<VaccinationList> {
                                               validator: (value) {
                                                 if (value == null ||
                                                     value.isEmpty) {
-                                                  return 'Enter the Vaccination Date';
+                                                  return 'Enter the Vet Visit Date';
                                                 }
                                               },
                                               onChanged: (text) {
-                                                vaccinationDate = text;
+                                                vetVisitDate = text;
                                               }),
                                           VaccinatedCheckBox(
                                               name: 'Given',
-                                              value:
-                                                  vaccinstionsList[index].done,
+                                              value: vetVisitsList[index].done,
                                               onChanged: (text) {
                                                 done = text ?? done;
                                               }),
@@ -195,18 +189,19 @@ class _VaccinationListState extends State<VaccinationList> {
                         if (direction == DismissDirection.startToEnd) {
                           print('');
                         } else {
-                          vaccinstionsList.removeAt(index);
+                          vetVisitsList.removeAt(index);
                         }
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('$item deleted')));
                     },
                     child: ListTile(
-                        title: Text(item),
+                        title: Text(
+                            item + " at " + vetVisitsList[index].clinicName),
                         subtitle: Text(dateFormat
-                                .format(vaccinstionsList[index].date) +
-                            ' at ${vaccinstionsList[index].hour}:${vaccinstionsList[index].minutes > 9 ? vaccinstionsList[index].minutes : '0' + (vaccinstionsList[index].minutes).toString()}'),
-                        trailing: vaccinstionsList[index].done == true
+                                .format(vetVisitsList[index].date) +
+                            ' at ${vetVisitsList[index].hour}:${vetVisitsList[index].minutes > 9 ? vetVisitsList[index].minutes : '0' + (vetVisitsList[index].minutes).toString()}'),
+                        trailing: vetVisitsList[index].done == true
                             ? Icon(Icons.done)
                             : Icon(Icons.close)),
                   );
@@ -254,42 +249,22 @@ class _VaccinationListState extends State<VaccinationList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,
         onPressed: () {
-          _addVaccination(widget.pet, () {
+          _addVetVisits(widget.pet, () {
             setState(() {});
           });
         },
-        tooltip: 'Add Vaccination',
+        tooltip: 'Add Vet Visit',
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
-  void _addVaccination(Pet pet, Function callback) {
+  void _addVetVisits(Pet pet, Function callback) {
     showDialog<Widget>(
         context: context,
         builder: (BuildContext context) {
-          return AddVaccination(pet: pet, callback: callback);
+          return AddVetVisit(pet: pet, callback: callback);
         });
-  }
-
-  Widget buildRow(Vaccination vaccination) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text(vaccination.vaccination),
-        ),
-        Text(dateFormat.format(vaccination.date)),
-        Checkbox(
-          value: vaccination.done,
-          onChanged: (bool? newValue) {
-            setState(() {
-              vaccination.done = newValue;
-            });
-          },
-        )
-      ],
-    );
   }
 }

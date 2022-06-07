@@ -2,12 +2,24 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pet_health_app/Hygiene/bath_list.dart';
+import 'package:pet_health_app/models/anti_flea.dart';
+import 'package:pet_health_app/models/bed.dart';
+import 'package:pet_health_app/models/ears.dart';
+import 'package:pet_health_app/models/food.dart';
+import 'package:pet_health_app/models/food_plate.dart';
+import 'package:pet_health_app/models/hair.dart';
 import 'package:pet_health_app/models/height.dart';
+import 'package:pet_health_app/models/leash_and_collar.dart';
+import 'package:pet_health_app/models/medication.dart';
+import 'package:pet_health_app/models/nails.dart';
 import 'package:pet_health_app/models/teeth.dart';
+import 'package:pet_health_app/models/toys.dart';
 import 'package:pet_health_app/models/vaccination.dart';
 import 'package:pet_health_app/models/bath.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:pet_health_app/models/vetVisits.dart';
+import 'package:pet_health_app/models/walk.dart';
+import 'package:pet_health_app/models/water_fountain.dart';
 import 'package:pet_health_app/models/weight.dart';
 
 import 'vaccination.dart';
@@ -23,6 +35,7 @@ class Pet {
   List<Vaccination> vaccinations;
   List<Bath> bathes;
   List<Teeth> teeth;
+  List<Food> food;
   String? referenceId;
   String? profileImage;
   String gender;
@@ -30,6 +43,18 @@ class Pet {
   List<String>? gallery;
   List<Weight>? weight;
   List<Height>? height;
+  List<VetVistis> vetVisits;
+  List<Medication> medications;
+  List<LeashAndCollar> leashesAndCollars;
+  List<Toys> toys;
+  List<Bed> beds;
+  List<WaterFountain> waterFountain;
+  List<FoodPlate> foodPlate;
+  List<Hair> hair;
+  List<Nails> nails;
+  List<AntiFlea> antiFlea;
+  List<Ears> ears;
+  List<Walk> walk;
 
   Pet(this.name,
       {this.notes,
@@ -41,8 +66,21 @@ class Pet {
       required this.vaccinations,
       required this.bathes,
       required this.teeth,
+      required this.food,
       required this.gender,
       required this.birthday,
+      required this.vetVisits,
+      required this.medications,
+      required this.leashesAndCollars,
+      required this.toys,
+      required this.beds,
+      required this.waterFountain,
+      required this.foodPlate,
+      required this.hair,
+      required this.nails,
+      required this.ears,
+      required this.antiFlea,
+      required this.walk,
       this.gallery,
       this.weight,
       this.height});
