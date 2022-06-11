@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 import 'package:pet_health_app/models/place_search.dart';
 
 class PlacesService {
-  final key = 'AIzaSyDqT2fxB1ahLfZQrLLEAQ9q4olSLwPxll8';
+  final key = '';
 
   Future<List<PlaceSearch>> getAutoComplete(String search) async {
     var url =
